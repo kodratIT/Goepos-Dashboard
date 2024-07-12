@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Livewire\Backend;
+namespace App\Livewire\Backend\Businesses;
 
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Models\BusinessesModel;
-use App\Services\ServiceBusinesses;
+use App\Services\ServiceFirestore;
+use Illuminate\Support\Facades\Session;
 use Kreait\Firebase\Contract\Firestore;
 
 class Businesses extends Component
@@ -23,14 +24,14 @@ class Businesses extends Component
         $this->loadDocuments();
     }
 
-    protected function getServiceBusinesses()
+    protected function firestore()
     {
-        return new ServiceBusinesses();
+        return new BusinessesModel();
     }
 
     public function loadDocuments()
     {
-        $this->documents = $this->getServiceBusinesses()->getAllDocuments();
+        $this->documents = $this->firestore()->getBusinessesAll(5);
     }
 
     public function addDocument()
@@ -39,7 +40,7 @@ class Businesses extends Component
             'newDocument.name' => 'required|string|max:255',
         ]);
 
-        $this->getServiceBusinesses()->addDocument($this->newDocument['name']);
+        $this->firestore()->addDocument($this->newDocument['name']);
 
         $this->newDocument = ['name' => ''];
         $this->loadDocuments();
@@ -47,10 +48,10 @@ class Businesses extends Component
         return redirect()->back();
     }
 
-    public function searchDocuments()
+    public function searchBusinesses()
     {
         if ($this->searchTerm) {
-            $this->documents = $this->getServiceBusinesses()->searchDocuments('email', $this->searchTerm);
+            $this->documents = $this->firestore()->searchBusinesses($this->searchTerm);
         } else {
             $this->loadDocuments();
         }
@@ -58,6 +59,7 @@ class Businesses extends Component
 
     public function render()
     {
-        return view('livewire.backend.businesses', ['documents' => $this->documents])->layout('layouts.app');
+        return view('livewire.backend.businesses.businesses', ['documents' => $this->documents])->layout('layouts.app');
     }
+
 }
