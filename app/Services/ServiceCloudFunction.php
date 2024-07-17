@@ -13,20 +13,21 @@ use Kreait\Firebase\Contract\Firestore;
 class ServiceCloudFunction
 {
 
-    public function createTransferPayment($data)
+    public function createTransferPayment($request)
     {
+        $json_decode = json_decode($request, true);
         $client = new Client();
 
         $data = [
-            'ownerUID' => $data->ownerUID,
-            'ownerEmail' => $data->ownerEmail,
-            'bankName' => $data->bankName,
-            'bankNumber' => $data->bankNumber,
-            'bankHolderName' => $data->bankHolderName,
-            'amount' => $data->amount,
-            'feeTrx' => $data->feeTrx,
-            'feeTransfer' => $data->feeTransfer,
-            'paymentMethod' => $data->paymentMethod
+            'ownerUID' => $json_decode['ownerUID'],
+            'ownerEmail' => $json_decode['ownerEmail'],
+            'bankName' => $json_decode['bankName'],
+            'bankNumber' => $json_decode['bankNumber'],
+            'bankHolderName' => $json_decode['bankHolderName'],
+            'amount' => $json_decode['amount'],
+            'feeTrx' => $json_decode['feeTrx'],
+            'feeTransfer' => $json_decode['feeTransfer'],
+            'paymentMethod' => $json_decode['paymentMethod']
         ];
 
         try {
@@ -34,8 +35,14 @@ class ServiceCloudFunction
                 'json' => $data
             ]);
 
+            $statusCode = $response->getStatusCode();
             $responseBody = json_decode($response->getBody(), true);
-            return response()->json($responseBody);
+
+            if ($statusCode == 200) {
+                return true;
+            } else {
+                return response()->json(['success' => false, 'data' => $responseBody], $statusCode);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()

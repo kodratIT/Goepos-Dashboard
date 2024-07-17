@@ -20,7 +20,7 @@
 
                                 <th scope="col" class="px-6 py-3">No</th>
                                 <th scope="col" class="px-6 py-3">ID Trx</th>
-                                <th scope="col" class="px-6 py-3">Net Amount</th>
+                                <th scope="col" class="px-6 py-3">Groos Amount</th>
                                 <th scope="col" class="px-6 py-3">Fee Amount</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">CreatedAt</th>
@@ -34,10 +34,14 @@
                                         <td class="px-6 py-4">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $transaction->id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap  @if($transaction->status == "paid")text-green-600  font-bold @endif">+ Rp.{{ $transaction->totalGroosAmount }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap @if($transaction->status == "paid") text-red-600 @endif ">-Rp.{{$transaction->totalfeeTrx }}</td>
+                                        @if($transaction->typePayment == 'withdrawal')
+                                             <td class="px-6 py-4 whitespace-nowrap @if($transaction->status == "paid") text-red-600 @endif ">-Rp.{{$transaction->totalfeeTransfer }}</td>
+                                        @else
+                                             <td class="px-6 py-4 whitespace-nowrap @if($transaction->status == "paid") text-red-600 @endif ">-Rp.{{$transaction->totalfeeTrx }}</td>
+                                        @endif
                                         <td class="px-6 py-4 whitespace-nowrap   @if($transaction->status == 'expired') text-red-600  @elseif ($transaction->status == 'processing') text-yellow-900) @else text-green-600  font-bold @endif "><span class="">{{ $transaction->status }}</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->createdAt }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">@if($transaction->status == 'paid')Fee Transaction {{ $transaction->feePercent }} @else - @endif</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">@if($transaction->status == 'paid')Fee Transaction {{ $transaction->feePercent }}@elseif($transaction->status == 'completed')Penarikan Saldo @else - @endif</td>
 
                                     </tr>
                                 @endforeach

@@ -25,10 +25,10 @@
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
 
-               <!-- reCAPTCHA -->
+               {{-- <!-- reCAPTCHA -->
                 <div class="mt-4">
                     <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                </div>
+                </div> --}}
 
             <div class="block mt-4">
                 <label for="remember_me" class="flex items-center">

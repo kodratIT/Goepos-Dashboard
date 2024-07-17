@@ -64,9 +64,18 @@ class BusinessesDetail extends Component
     }
 
     public function qrisActivate()
-    {
+{
+        $filteredBusinessId = null;
+
+        foreach ($this->paymentMethod as $business) {
+            if ($business->name === 'QRIS') {
+                $filteredBusinessId = $business->id;
+                break;
+            }
+        };
+
         $timestamp = Carbon::now();
-        $result = $this->firestore()->activateQris($this->ownerUid, $timestamp);
+        $result = $this->firestore()->activateQris($this->ownerUid, $timestamp,$filteredBusinessId);
         $this->getBussinesDetailByOwnerUid($this->ownerUid);
 
     }

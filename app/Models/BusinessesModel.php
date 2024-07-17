@@ -49,9 +49,9 @@ class BusinessesModel extends Model
     {
         return  $this->firestore->getStaffByOwnerUid($ownerUid);
     }
-    public function activateQris($ownerUid, $timestamp)
+    public function activateQris($ownerUid, $timestamp,$paymentMethod)
     {
-        return  $this->firestore->activateQris($ownerUid, $timestamp);
+        return  $this->firestore->activateQris($ownerUid, $timestamp,$paymentMethod);
     }
 
     public function createBankAccount($ownerUid, $data){

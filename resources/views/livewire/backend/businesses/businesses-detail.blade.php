@@ -189,14 +189,14 @@
                                             </td>
                                             @if (property_exists($data, 'qris'))
                                                 <td class="px-6 py-4">
-                                                    @if ($data->qris->enableByGoePos)
+                                                    @if ($data->qris->enabledByGoePos)
                                                         Active
                                                     @else
                                                         inactive
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    @if ($data->qris->enableByOwner)
+                                                    @if ($data->qris->enabledByOwner)
                                                         Active
                                                     @else
                                                         inActive

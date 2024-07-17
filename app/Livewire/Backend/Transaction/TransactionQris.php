@@ -46,6 +46,8 @@ class TransactionQris extends Component
     public function getTransactionQris()
     {
         $this->transactions = $this->firestore()->getTransactionQris($this->ownerUid);
+        // dd($this->transactions);
+
     }
 
     public function getTransactionDetail()

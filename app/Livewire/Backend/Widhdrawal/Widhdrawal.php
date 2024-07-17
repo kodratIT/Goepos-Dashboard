@@ -13,7 +13,7 @@ class Widhdrawal extends Component
     public $document ;
     public $balanceAmount;
     public $feeTrx;
-    public $feeTransfer = 10000;
+    public $feeTransfer = 5000;
     public $balanceCheckout;
     public $verify = false;
     public $ownerUid;
@@ -50,9 +50,6 @@ class Widhdrawal extends Component
         return $this->redirect(route('widhdrawal.qris.verify', ['id' => $this->ownerUid]), navigate: true);
     }
 
-    public function withdrawallSaldo(){
-        dd("oke");
-    }
 
     public function updateBalance($newValue)
     {
@@ -83,33 +80,33 @@ class Widhdrawal extends Component
     {
         $data = $this->transaction()->getTransactionDetail($ownerUid);
 
-        $this->balanceAmount = $data->gross_qris_amount;
-        $this->balanceCheckout = $data->gross_qris_amount;
-        $this->feeTrx = $data->gross_qris_amount - $data->net_qris_amount;
+        $this->balanceAmount = $data->net_qris_amount;
+        $this->balanceCheckout = $data->net_qris_amount;
+        $this->feeTrx = $data->fee_qris_amount;
     }
 
     public function createPaymentTransferQris(){
-
-        dd([
-            'document' => $this->document,
-            'bankAccount' => $this->bankAccount,
-            'balanceCheckout' => $this->balanceCheckout,
-            'feeTransfer' => $this->feeTransfer,
-            'ownerUid' => $this->ownerUid,
-            'feeTrx' => $this->feeTrx,
-        ]);
         $data = [
-            'ownerUID' => $data->ownerUID,
-            'ownerEmail' => $data->ownerEmail,
-            'bankName' => $data->bankName,
-            'bankNumber' => $data->bankNumber,
-            'bankHolderName' => $data->bankHolderName,
-            'amount' => $data->amount,
-            'feeTrx' => $data->feeTrx,
-            'feeTransfer' => $data->feeTransfer,
-            'paymentMethod' => $data->paymentMethod
+            'ownerUID' => $this->ownerUid,
+            'ownerEmail' => $this->document->email,
+            'bankName' => $this->bankAccount->bankType,
+            'bankNumber' => $this->bankAccount->accountNumber,
+            'bankHolderName' => $this->bankAccount->nameAccount,
+            'amount' => $this->balanceCheckout,
+            'feeTrx' => $this->feeTrx,
+            'feeTransfer' => $this->feeTransfer,
+            'paymentMethod' => 'qris',
         ];
-        $this->transaction()->createTransferPayment($data);
+
+        $jsonData = json_encode($data);
+
+        $result = $this->transaction()->createTransferPayment($jsonData);
+
+        if($result){
+            return $this->redirect(route('transaction.qris', ['id' => $this->ownerUid]), navigate: true);
+        }else{
+            dd($result);
+        }
     }
     public function render()
     {

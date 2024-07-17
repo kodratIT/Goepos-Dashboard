@@ -149,10 +149,10 @@ class ServiceFirestore
     }
 
 
-    public function activateQris($ownerUid, $timestamp)
+    public function activateQris($ownerUid, $timestamp,$paymentMethod)
     {
         $qris = [
-            'activationStatus' => true,
+            'activationStatus' => 'active',
             'activationStatusNote' => 'Syarat Terpenuhi',
             'activeAt' => new Timestamp($timestamp),
             'category' => [
@@ -161,13 +161,16 @@ class ServiceFirestore
             ],
             'createdAt' => new Timestamp($timestamp),
             'deletedAt' => null,
-            'enableByGoePos' => true,
-            'enableByOwner' => true,
+            'enabledByGoePos' => true,
+            'enabledByOwner' => true,
+            'id'   => $paymentMethod,
+            'name' => 'QRIS'
         ];
 
         $referencePayment = [
             'net_qris_amount' => 0,
-            'gross_qris_amount' => 0,
+            'groos_qris_amount' => 0,
+            'fee_qris_amount' => 0,
             'settlement_qris_amount' => 0,
             'ownerUid' => $ownerUid,
             'createdAt' => new Timestamp($timestamp),
@@ -242,7 +245,8 @@ class ServiceFirestore
                                                    ->document($ownerUid)
                                                    ->collection("transactions")
                                                    ->document("payment")
-                                                   ->collection("qris");
+                                                   ->collection("qris")
+                                                   ->orderBy('createdAt', 'DESC'); // Mengurutkan berdasarkan field 'timestamp' secara descending
 
             $documents = $collectionReference->documents();
 
@@ -260,6 +264,7 @@ class ServiceFirestore
             Log::error('Error fetching documents: ' . $e->getMessage());
             return json_decode(json_encode([]), false);
         }
+
     }
 
     public function getTransactionDetail($ownerUid)

@@ -109,6 +109,24 @@
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                     </thead>
                                     <tbody>
+                                        <tr class="bg-white dark:bg-gray-800 underline">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                Fee Trx
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Rp.{{ $feeTrx  }}
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="relative overflow-x-auto">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                    </thead>
+                                    <tbody>
+                                        <hr>    
                                         <tr class="bg-white dark:bg-gray-800">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 Amount
@@ -117,14 +135,7 @@
                                                 Rp.{{ $balanceCheckout }}
                                             </td>
                                         </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Fee Transaction
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                - Rp.{{ $feeTrx  }}
-                                            </td>
-                                        </tr>
+
                                         <tr class="bg-white dark:bg-gray-800">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 Fee Transfer
@@ -138,7 +149,7 @@
                                     <tfoot>
                                         <tr class="font-semibold text-gray-900 dark:text-white">
                                             <th scope="row" class="px-6 py-3 text-base">Total</th>
-                                            <td class="px-6 py-3">Rp.{{ $balanceCheckout - ($feeTransfer + $feeTrx) }}</td>
+                                            <td class="px-6 py-3">Rp.{{ $balanceCheckout - ($feeTransfer) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
