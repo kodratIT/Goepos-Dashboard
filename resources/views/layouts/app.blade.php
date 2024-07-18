@@ -21,7 +21,7 @@
         @livewireStyles
 
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" >
         <x-banner />
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @livewire('navigation-menu')
@@ -36,12 +36,13 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main id="vanta-bg">
                 {{ $slot }}
             </main>
         </div>
 
         @stack('modals')
+        
         @livewireScripts
 
     </body>
