@@ -50,24 +50,4 @@
         </form>
     </x-authentication-card>
 </x-guest-layout>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-<script>
-VANTA.NET({
-  el: "#vanta-bg",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  scale: 1.00,
-  scaleMobile: 1.00,
-  color: 0xff0053,
-  backgroundColor: 0x1d172a,
-  points: 13.00,
-  maxDistance: 21.00,
-  spacing: 16.00,
-  showDots: false
-})
-</script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
