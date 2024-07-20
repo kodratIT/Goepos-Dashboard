@@ -79,6 +79,7 @@ class RequestApi
             'bankShortCode' => $data['bankShortCode'],
         ];
 
+
         try {
             // Melakukan permintaan GET ke API
             $response = $client->request('GET', $endpoint, [

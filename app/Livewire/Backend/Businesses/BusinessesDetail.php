@@ -29,8 +29,8 @@ class BusinessesDetail extends Component
 
     protected $rules = [
         'bankType' => 'required',
-        'nameAccount' => 'required|string|max:255',
-        'bankNumber' => 'required|numeric|digits:15',
+        'nameAccount' => 'required',
+        'bankNumber' => 'required',
     ];
 
     public function mount($id)
