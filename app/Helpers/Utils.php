@@ -35,3 +35,9 @@ function adjustKeyLength($key)
 {
     return hash('sha256', $key, true);
 }
+
+
+function convertTimestampToDate($timestamp)
+{
+    return Carbon::createFromTimestamp($timestamp)->toDateString();
+}

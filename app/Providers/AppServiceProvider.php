@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Livewire::component('components.search-businesses', \App\Http\Livewire\Components\Businesses\SearchBusinesses::class);
+        Livewire::component('components.table-businesses', \App\Http\Livewire\Components\Businesses\TableBusinesses::class);
     }
 }

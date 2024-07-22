@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use DateTime;
 use Carbon\Carbon;
 use App\Models\StaffModel;
 use Kreait\Firebase\Factory;
+use App\Helpers\HelpersUtils;
+use GuzzleHttp\Promise\settle;
 use App\Models\BusinessesModel;
+use GuzzleHttp\Promise\Promise;
 use Google\Cloud\Core\Timestamp;
 use Kreait\Firebase\Contract\Firestore;
 
@@ -23,20 +27,123 @@ class ServiceFirestore
     public function getBusinessesAll($limit)
     {
         try {
-            $documents = $this->firestore->collection("businesses")->limit($limit)->documents();
+            // Calculate the previous month in the format 'YYYY-MM'
+            $previousMonth = (new DateTime('first day of last month'))->format('Y-m');
+
+            // Calculate the previous day in the format 'YYYY-MM-DD'
+            $previousDay = (new DateTime('yesterday'))->format('Y-m-d');
+
+            // Fetch business documents
+            $documents = $this->firestore->collection("businesses")
+                ->where('subscriptionId', '!=', 'goepos_free')
+                ->limit($limit)
+                ->documents();
+
             $data = [];
+            $subscriptionsCache = [];
+
+            // Collect ownerUid and subscriptionId pairs
+            $batchRequests = [];
             foreach ($documents as $document) {
                 if ($document->exists()) {
-                    // Tambahkan data dokumen ke array
-                    $data[] = $document->data();
+                    $ownerUid = $document['ownerUid'];
+                    $subscriptionId = $document['subscriptionId'];
+                    $batchRequests[] = [
+                        'ownerUid' => $ownerUid,
+                        'subscriptionId' => $subscriptionId,
+                        'document' => $document
+                    ];
                 }
             }
+
+            // Process batch requests
+            foreach ($batchRequests as $request) {
+                $ownerUid = $request['ownerUid'];
+                $subscriptionId = $request['subscriptionId'];
+
+                // Cache subscription fetch requests
+                if (!isset($subscriptionsCache[$ownerUid][$subscriptionId])) {
+                    $subscriptionDocs = $this->firestore->collection('businesses')
+                        ->document($ownerUid)
+                        ->collection('subscriptions')
+                        ->document($subscriptionId)
+                        ->snapshot();
+
+                    if ($subscriptionDocs->exists()) {
+                        $subscriptionsCache[$ownerUid][$subscriptionId] = $subscriptionDocs->data();
+                    }
+                }
+
+                $fields = $subscriptionsCache[$ownerUid][$subscriptionId] ?? [];
+                $sku = $fields['sku'] ?? null;
+                $expiration = isset($fields['expiration']) ? HelpersUtils::formatTimestamp($fields['expiration']) : null;
+
+                $mergedDocument = $request['document']->data();
+                $mergedDocument['sku'] = $sku;
+                $mergedDocument['expiration'] = $expiration;
+                $mergedDocument['createdAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['createdAt']);
+                $mergedDocument['updatedAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['updatedAt']);
+
+                // Fetch monthly report document
+                $reportDoc = $this->firestore->collection('reports')
+                    ->document($ownerUid)
+                    ->collection('monthly')
+                    ->document($previousMonth)
+                    ->snapshot();
+
+                if ($reportDoc->exists()) {
+                    $cardTotal = $reportDoc->get('cardTotal') ?? 0;
+                    $cashTotal = $reportDoc->get('cashTotal') ?? 0;
+                    $qrisTotal = $reportDoc->get('qrisTotal') ?? 0;
+
+                    $numSales = $reportDoc->get('numSales') ?? 0;
+                    $numCredit = $reportDoc->get('numCredit') ?? 0;
+                    $numQris = $reportDoc->get('numQris') ?? 0;
+                    $numReturn = $reportDoc->get('numReturn') ?? 0;
+
+                    $mergedDocument['totalTrxQtyMonth'] = ($numQris + $numSales + $numCredit) - $numReturn;
+                    $mergedDocument['totalTrxMonth'] = $cardTotal + $cashTotal + $qrisTotal;
+                } else {
+                    $mergedDocument['totalTrxMonth'] = 0;
+                    $mergedDocument['totalTrxQtyMonth'] = 0;
+                }
+
+                // Fetch daily report document
+                $dailyReportDoc = $this->firestore->collection('reports')
+                    ->document($ownerUid)
+                    ->collection('daily')
+                    ->document($previousDay)
+                    ->snapshot();
+
+                if ($dailyReportDoc->exists()) {
+                    $dailyCardTotal = $dailyReportDoc->get('cardTotal') ?? 0;
+                    $dailyCashTotal = $dailyReportDoc->get('cashTotal') ?? 0;
+                    $dailyQrisTotal = $dailyReportDoc->get('qrisTotal') ?? 0;
+
+                    $dailyNumSales = $dailyReportDoc->get('numSales') ?? 0;
+                    $dailyNumCredit = $dailyReportDoc->get('numCredit') ?? 0;
+                    $dailyNumQris = $dailyReportDoc->get('numQris') ?? 0;
+                    $dailyNumReturn = $dailyReportDoc->get('numReturn') ?? 0;
+
+                    $mergedDocument['totalTrxQtyDay'] = ($dailyNumQris + $dailyNumSales + $dailyNumCredit) - $dailyNumReturn;
+                    $mergedDocument['totalTrxDay'] = $dailyCardTotal + $dailyCashTotal + $dailyQrisTotal;
+                } else {
+                    $mergedDocument['totalTrxDay'] = 0;
+                    $mergedDocument['totalTrxQtyDay'] = 0;
+                }
+
+                // Add the merged document to the data array
+                $data[] = $mergedDocument;
+            }
+
             return json_decode(json_encode($data), false);
         } catch (Exception $e) {
             // Log::error('Error fetching businesses: ' . $e->getMessage());
             return [];
         }
     }
+
+
 
     public function addDocument($name)
     {
@@ -65,26 +172,113 @@ class ServiceFirestore
     }
 
     public function searchBusinesses($field, $searchTerm)
-    {
-        try {
-            $query = $this->firestore->collection("businesses")
-                ->where($field, '>=', $searchTerm)
-                ->where($field, '<=', $searchTerm . '\uf8ff');
-            $documents = $query->documents();
+{
+    try {
+        $query = $this->firestore->collection("businesses")
+            ->where($field, '>=', $searchTerm)
+            ->where($field, '<=', $searchTerm . '\uf8ff');
+        $documents = $query->documents();
 
-            $data = [];
+        $data = [];
+        $subscriptionsCache = [];
+        $previousMonth = (new DateTime('first day of last month'))->format('Y-m');
+        $previousDay = (new DateTime('yesterday'))->format('Y-m-d');
 
-            foreach ($documents as $document) {
-                if ($document->exists()) {
-                    $data[] = $document->data();
+        $batchRequests = [];
+        foreach ($documents as $document) {
+            if ($document->exists()) {
+                $ownerUid = $document['ownerUid'];
+                $subscriptionId = $document['subscriptionId'];
+                $batchRequests[] = [
+                    'ownerUid' => $ownerUid,
+                    'subscriptionId' => $subscriptionId,
+                    'document' => $document
+                ];
+            }
+        }
+
+        foreach ($batchRequests as $request) {
+            $ownerUid = $request['ownerUid'];
+            $subscriptionId = $request['subscriptionId'];
+
+            if (!isset($subscriptionsCache[$ownerUid][$subscriptionId])) {
+                $subscriptionDocs = $this->firestore->collection('businesses')
+                    ->document($ownerUid)
+                    ->collection('subscriptions')
+                    ->document($subscriptionId)
+                    ->snapshot();
+
+                if ($subscriptionDocs->exists()) {
+                    $subscriptionsCache[$ownerUid][$subscriptionId] = $subscriptionDocs->data();
                 }
             }
 
-            return json_decode(json_encode($data), false);
-        } catch (Exception $e) {
-            // Log::error('Error
+            $fields = $subscriptionsCache[$ownerUid][$subscriptionId] ?? [];
+            $sku = $fields['sku'] ?? null;
+            $expiration = isset($fields['expiration']) ? HelpersUtils::formatTimestamp($fields['expiration']) : null;
+
+            $mergedDocument = $request['document']->data();
+            $mergedDocument['sku'] = $sku;
+            $mergedDocument['expiration'] = $expiration;
+            $mergedDocument['createdAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['createdAt']);
+            $mergedDocument['updatedAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['updatedAt']);
+
+            $reportDoc = $this->firestore->collection('reports')
+                ->document($ownerUid)
+                ->collection('monthly')
+                ->document($previousMonth)
+                ->snapshot();
+
+            if ($reportDoc->exists()) {
+                $cardTotal = $reportDoc->get('cardTotal') ?? 0;
+                $cashTotal = $reportDoc->get('cashTotal') ?? 0;
+                $qrisTotal = $reportDoc->get('qrisTotal') ?? 0;
+
+                $numSales = $reportDoc->get('numSales') ?? 0;
+                $numCredit = $reportDoc->get('numCredit') ?? 0;
+                $numQris = $reportDoc->get('numQris') ?? 0;
+                $numReturn = $reportDoc->get('numReturn') ?? 0;
+
+                $mergedDocument['totalTrxQtyMonth'] = ($numQris + $numSales + $numCredit) - $numReturn;
+                $mergedDocument['totalTrxMonth'] = $cardTotal + $cashTotal + $qrisTotal;
+            } else {
+                $mergedDocument['totalTrxMonth'] = 0;
+                $mergedDocument['totalTrxQtyMonth'] = 0;
+            }
+
+            $dailyReportDoc = $this->firestore->collection('reports')
+                ->document($ownerUid)
+                ->collection('daily')
+                ->document($previousDay)
+                ->snapshot();
+
+            if ($dailyReportDoc->exists()) {
+                $dailyCardTotal = $dailyReportDoc->get('cardTotal') ?? 0;
+                $dailyCashTotal = $dailyReportDoc->get('cashTotal') ?? 0;
+                $dailyQrisTotal = $dailyReportDoc->get('qrisTotal') ?? 0;
+
+                $dailyNumSales = $dailyReportDoc->get('numSales') ?? 0;
+                $dailyNumCredit = $dailyReportDoc->get('numCredit') ?? 0;
+                $dailyNumQris = $dailyReportDoc->get('numQris') ?? 0;
+                $dailyNumReturn = $dailyReportDoc->get('numReturn') ?? 0;
+
+                $mergedDocument['totalTrxQtyDay'] = ($dailyNumQris + $dailyNumSales + $dailyNumCredit) - $dailyNumReturn;
+                $mergedDocument['totalTrxDay'] = $dailyCardTotal + $dailyCashTotal + $dailyQrisTotal;
+            } else {
+                $mergedDocument['totalTrxDay'] = 0;
+                $mergedDocument['totalTrxQtyDay'] = 0;
+            }
+
+            $data[] = $mergedDocument;
         }
+
+        return json_decode(json_encode($data), false);
+    } catch (Exception $e) {
+        // Log::error('Error fetching businesses: ' . $e->getMessage());
+        return [];
     }
+}
+
 
     public function getBussinesDetailByOwnerUid($ownerUid)
     {
