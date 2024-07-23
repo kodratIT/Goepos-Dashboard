@@ -42,16 +42,6 @@
                             <td>:</td>
                             <td>{{ $data->description ?? '-' }}</td>
                         </tr>
-                        {{-- <tr>
-                            <td class="font-semibold text-gray-900 dark:text-white">Display Image</td>
-                            <td>:</td>
-                            <td><img src="{{ $data->displayImage ?? '#' }}" alt="Display Image" class="h-16 w-16 object-cover"></td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold text-gray-900 dark:text-white">Image</td>
-                            <td>:</td>
-                            <td><img src="{{ $data->image ?? '#' }}" alt="Image" class="h-16 w-16 object-cover"></td>
-                        </tr> --}}
                         <tr>
                             <td class="font-semibold text-gray-900 dark:text-white">Subscription Products</td>
                             <td>:</td>
