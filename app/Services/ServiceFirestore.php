@@ -221,7 +221,7 @@ class ServiceFirestore
             $mergedDocument['sku'] = $sku;
             $mergedDocument['expiration'] = $expiration;
             $mergedDocument['createdAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['createdAt']);
-            $mergedDocument['updatedAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['updatedAt']) ?? '-';
+            // $mergedDocument['updatedAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['updatedAt']) ?? '-';
 
             $reportDoc = $this->firestore->collection('reports')
                 ->document($ownerUid)

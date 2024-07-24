@@ -3,6 +3,7 @@
 namespace App\Livewire\Backend\Components;
 
 use Livewire\Component;
+use App\Models\BusinessesModel;
 
 class BankAccountForm extends Component
 {
@@ -10,17 +11,51 @@ class BankAccountForm extends Component
     public $nameAccount;
     public $bankNumber;
     public $isSaving = false;
+    public $ownerUid;
 
-    public function saveBankAccount()
+    protected $rules = [
+        'bankType' => 'required',
+        'nameAccount' => 'required',
+        'bankNumber' => 'required',
+    ];
+
+    public function mount($ownerUid){
+        $this->ownerUid = $ownerUid;
+    }
+
+    protected function firestore()
     {
-        // Simpan data bank
-        $this->isSaving = true;
+        return new BusinessesModel();
+    }
 
-        // Simulate saving process
-        sleep(2);
+    public function saveBankAccount(){
+        $this->validate();
 
-        $this->isSaving = false;
-        $this->dispatchBrowserEvent('bankAccountSaved');
+        $data = [
+            'bankShortCode' => $this->bankType,
+            'nameAccount' => $this->nameAccount,
+            'bankNumber' => $this->bankNumber,
+        ];
+
+        $requestApi = $this->firestore()->checkValidatedBankAccount($data);
+
+        if($requestApi){
+            $result = $this->firestore()->createBankAccount($this->ownerUid,$data);
+
+            sleep(5);
+
+            $this->isSaving = false;
+
+            toastr()->success('Data Bank Berhasil di Buat!');
+
+            $this->dispatch('bankSaved', true);
+
+            $this->bankType = [];
+            $this->nameAccount = [];
+            $this->bankNumber = [];
+        } else {
+            toastr()->error('Data Bank Tidak Terdaftar!');
+        }
     }
 
     public function render()

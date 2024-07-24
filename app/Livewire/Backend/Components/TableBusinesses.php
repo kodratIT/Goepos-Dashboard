@@ -14,7 +14,6 @@ class TableBusinesses extends Component
 
     public function mount()
     {
-        // $this->loadDocuments();
     }
 
     protected function firestore()
@@ -24,29 +23,13 @@ class TableBusinesses extends Component
 
     public function loadDocuments()
     {
-        $this->documents = $this->firestore()->getBusinessesAll(25);
-        // dd($this->documents);
-    }
-
-    public function addDocument()
-    {
-        $this->validate([
-            'newDocument.name' => 'required|string|max:255',
-        ]);
-
-        $this->firestore()->addDocument($this->newDocument['name']);
-
-        $this->newDocument = ['name' => ''];
-        $this->loadDocuments();
-
-        return redirect()->back();
+        $this->documents = $this->firestore()->getBusinessesAll($this->row);
     }
 
     public function searchUpdated($documents)
     {
         $this->documents = [];
         $this->documents = json_decode(json_encode($documents), false);
-        // dd($this->documents);
     }
 
     public function render()

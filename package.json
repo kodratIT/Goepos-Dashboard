@@ -19,6 +19,7 @@
     "dependencies": {
         "datatables.net-bs4": "^2.0.8",
         "datatables.net-responsive-bs4": "^3.0.2",
+        "sweetalert2": "^11.12.3",
         "vanta": "^0.5.24"
     }
 }

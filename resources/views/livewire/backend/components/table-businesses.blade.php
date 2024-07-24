@@ -85,7 +85,7 @@
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyDay ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ isset($document->updatedAt) ? \App\Helpers\HelpersUtils::convertTimestampToDate($document->updatedAt) : '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-right">
-                                    <a href="{{ route('businesses.detail', ['id' => $document->ownerUid]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</a>
+                                    <a wire:navigate href="{{ route('businesses.detail', ['id' => $document->ownerUid]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</a>
                                 </td>
                             </tr>
                         @endforeach

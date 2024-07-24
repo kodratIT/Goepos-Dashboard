@@ -4,8 +4,18 @@
             Detail Businesses
         </h2>
     </x-slot>
-
     <div class="container mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+           <div class="col-span-1">
+              @livewire('backend.components.user-details', ['ownerUid' => $data])
+           </div>
+           <div class="col-span-2">
+              @livewire('backend.components.staff-details', ['ownerUid' => $data])
+           </div>
+        </div>
+     </div>
+
+    {{-- <div class="container mx-auto p-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Left Section: User Details -->
             <div class="col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -251,6 +261,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
