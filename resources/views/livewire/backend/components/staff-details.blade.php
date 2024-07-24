@@ -85,7 +85,8 @@
                                             @endif
                                         </td>
                                         <td class="px-6 whitespace-nowrap">
-                                           {{ \app\Helpers\HelpersUtils::formatRupiah($net_amount) }}
+                                           {{-- {{ \app\Helpers\HelpersUtils::formatRupiah($net_amount) }} --}}
+                                           Rp. {{ $net_amount }}
                                         </td>
                                     @endif
                                         <td class="px-6 whitespace-nowrap">
