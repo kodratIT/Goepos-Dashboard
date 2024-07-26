@@ -9,7 +9,7 @@ class TableBusinesses extends Component
 {
     public $documents = [];
     public $newDocument = ['name' => ''];
-    public $row = 1;
+    public $row = 25;
     protected $listeners = ['searchUpdated'];
 
     public function mount()
