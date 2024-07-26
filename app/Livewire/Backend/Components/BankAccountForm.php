@@ -4,6 +4,7 @@ namespace App\Livewire\Backend\Components;
 
 use Livewire\Component;
 use App\Models\BusinessesModel;
+use App\Models\bankShortCodeModel;
 
 class BankAccountForm extends Component
 {
@@ -12,6 +13,7 @@ class BankAccountForm extends Component
     public $bankNumber;
     public $isSaving = false;
     public $ownerUid;
+    public $bank_code = [];
 
     protected $rules = [
         'bankType' => 'required',
@@ -21,6 +23,11 @@ class BankAccountForm extends Component
 
     public function mount($ownerUid){
         $this->ownerUid = $ownerUid;
+        $this->getShortCodeBank();
+    }
+
+    protected function getShortCodeBank(){
+        $this->bank_code = bankShortCodeModel::all();
     }
 
     protected function firestore()

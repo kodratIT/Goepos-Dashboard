@@ -53,6 +53,14 @@ class BusinessesModel extends Model
     {
         return  $this->firestore->activateQris($ownerUid, $timestamp,$paymentMethod);
     }
+    public function disabledQrisByGoepos($ownerUid)
+    {
+        return  $this->firestore->disabledQrisByGoepos($ownerUid);
+    }
+    public function activedQrisByGoepos($ownerUid)
+    {
+        return  $this->firestore->activedQrisByGoepos($ownerUid);
+    }
 
     public function createBankAccount($ownerUid, $data){
         return $this->firestore->createBankAccount($ownerUid, $data);

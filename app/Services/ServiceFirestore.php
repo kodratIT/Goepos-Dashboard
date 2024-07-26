@@ -429,6 +429,34 @@ class ServiceFirestore
 
     }
 
+    public function disabledQrisByGoepos($ownerUid){
+
+        try {
+            $this->firestore->collection('businesses')->document($ownerUid)->update([
+                ['path' => 'qris.enabledByGoePos', 'value' => false],
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            return 'Error disabling QRIS: ' . $e->getMessage();
+        }
+
+    }
+
+    public function activedQrisByGoepos($ownerUid){
+
+        try {
+            $this->firestore->collection('businesses')->document($ownerUid)->update([
+                ['path' => 'qris.enabledByGoePos', 'value' => true],
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            return 'Error disabling QRIS: ' . $e->getMessage();
+        }
+
+    }
+
     // End Businesses
 
     // Transaction
@@ -475,8 +503,6 @@ class ServiceFirestore
 
         return  json_decode(json_encode($data), false);
     }
-
-
 
     public function addBankAccount($ownerUid, $data)
     {

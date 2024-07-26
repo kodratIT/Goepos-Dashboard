@@ -102,8 +102,29 @@ class StaffDetails extends Component
         $this->net_amount = $net_amount->net_qris_amount ?? '0';
     }
 
-    public function disabled(){
-        toastr()->success('Data has been saved successfully!');
+    public function qrisDisabled(){
+
+        $status = $this->firestore()->disabledQrisByGoepos($this->ownerUid);
+        if($status){
+            $this->refreshData();
+
+            toastr()->success('QRIS Sukses di Nonaktifkan!');
+        }else{
+            toastr()->error('QRIS Gagal di Nonaktifkan!');
+
+        }
+    }
+    public function qrisActive(){
+
+        $status = $this->firestore()->activedQrisByGoepos($this->ownerUid);
+        if($status){
+            $this->refreshData();
+
+            toastr()->success('QRIS Sukses di Aktifkan!');
+        }else{
+            toastr()->error('QRIS Gagal di Aktifkan!');
+
+        }
     }
 
     public function render()

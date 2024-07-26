@@ -7,16 +7,9 @@
                 <label for="Bank-type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank Name</label>
                 <select id="Bank-type" wire:model="bankType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                     <option value="">Pilih Bank</option>
-                    <option value="MANDIRI">Bank Mandiri</option>
-                    <option value="BCA">Bank Central Asia (BCA)</option>
-                    <option value="BRI">Bank Rakyat Indonesia (BRI)</option>
-                    <option value="BNI">Bank Negara Indonesia (BNI)</option>
-                    <option value="CIMB">CIMB Niaga</option>
-                    <option value="DANAMON">Bank Danamon</option>
-                    <option value="PERMATA">Bank Permata</option>
-                    <option value="PANIN">Bank Panin</option>
-                    <option value="BTN">Bank Tabungan Negara (BTN)</option>
-                    <option value="MEGA">Bank Mega</option>
+                    @foreach ($bank_code as $bank )
+                    <option value="{{ $bank->short_code }}">{{ $bank->bank_name }}</option>
+                    @endforeach
                 </select>
             </div>
 
