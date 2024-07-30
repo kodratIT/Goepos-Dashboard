@@ -325,7 +325,7 @@ class ServiceFirestore
     public function getStaffByOwnerUid($ownerUid)
     {
         try {
-            $collection = $this->firestore->collection("Businesses")->document($ownerUid)->collection('staffs');
+            $collection = $this->firestore->collection("businesses")->document($ownerUid)->collection('staffs');
             $documents = $collection->documents();
 
             $data = [];

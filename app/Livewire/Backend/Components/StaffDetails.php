@@ -14,19 +14,19 @@ class StaffDetails extends Component
     public $data;
     public $ownerUid;
     public $is_bankActive;
-    public $net_amount=0;
+    public $net_amount = 0;
 
-    protected $listeners = ['bankSaved'];
+    protected $listeners = ['bankSaved','refreshComponent'];
 
     protected function firestore()
     {
         return new BusinessesModel();
     }
+
     protected function trx()
     {
         return new TransactionModel();
     }
-
 
     public function mount($ownerUid)
     {
@@ -41,11 +41,13 @@ class StaffDetails extends Component
         $this->refreshData();
     }
 
-    public function refreshData(){
+    public function refreshData()
+    {
         $this->getStaffByOwnerUid($this->ownerUid);
         $this->getBussinesDetailByOwnerUid($this->ownerUid);
         $this->getPaymentMethod($this->ownerUid);
         $this->getNetAmountQris($this->ownerUid);
+        $this->dispatch('documentsLoaded'); // Emit event setelah data dimuat
     }
 
     public function getPaymentMethod()
@@ -56,11 +58,12 @@ class StaffDetails extends Component
     public function getStaffByOwnerUid($ownerUid)
     {
         $this->staff = $this->firestore()->getStaffByOwnerUid($ownerUid);
+        $this->dispatch('documentsLoaded');
     }
 
     public function confirmActivate($paymentId)
     {
-        $this->dispatchBrowserEvent('confirm-activate', ['paymentId' => $paymentId]);
+        $this->dispatch('confirm-activate', ['paymentId' => $paymentId]);
     }
 
     public function qrisActivate()
@@ -72,58 +75,60 @@ class StaffDetails extends Component
                 $filteredBusinessId = $business->id;
                 break;
             }
-        };
+        }
 
         $timestamp = Carbon::now();
-        $result = $this->firestore()->activateQris($this->ownerUid, $timestamp,$filteredBusinessId);
+        $result = $this->firestore()->activateQris($this->ownerUid, $timestamp, $filteredBusinessId);
 
-        toastr()->success('Berhasil Mengaktifkan Metode Qris');
-        $this->getBussinesDetailByOwnerUid($this->ownerUid);
+        if ($result) {
+            $this->refreshData();
+            $this->dispatch('qrisActivated'); // Emit event setelah QRIS diaktifkan
+            toastr()->success('Berhasil Mengaktifkan Metode Qris');
 
+        } else {
+            toastr()->error('Gagal Mengaktifkan Metode Qris');
+        }
     }
 
     public function getBussinesDetailByOwnerUid($ownerUid)
     {
-       $this->data = $this->firestore()->getBussinesDetailByOwnerUid($ownerUid);
+        $this->data = $this->firestore()->getBussinesDetailByOwnerUid($ownerUid);
     }
 
     public function getBankAccount($ownerUid)
     {
         $result = $this->firestore()->getBankAccount($ownerUid);
-        if($result){
-            $this->is_bankActive = false;
-        }else{
-            $this->is_bankActive = true;
-        }
+        $this->is_bankActive = !$result;
     }
 
-    public function getNetAmountQris($ownerUid){
+    public function getNetAmountQris($ownerUid)
+    {
         $net_amount = $this->trx()->getTransactionDetail($ownerUid);
         $this->net_amount = $net_amount->net_qris_amount ?? '0';
     }
 
-    public function qrisDisabled(){
-
+    public function qrisDisabled()
+    {
         $status = $this->firestore()->disabledQrisByGoepos($this->ownerUid);
-        if($status){
+        if ($status) {
             $this->refreshData();
+            $this->dispatch('refreshComponent');
+            toastr()->success('QRIS Berhasil di Nonaktifkan!');
 
-            toastr()->success('QRIS Sukses di Nonaktifkan!');
-        }else{
+        } else {
             toastr()->error('QRIS Gagal di Nonaktifkan!');
-
         }
     }
-    public function qrisActive(){
 
+    public function qrisActive()
+    {
         $status = $this->firestore()->activedQrisByGoepos($this->ownerUid);
-        if($status){
+        if ($status) {
             $this->refreshData();
-
-            toastr()->success('QRIS Sukses di Aktifkan!');
-        }else{
+            $this->dispatch('refreshComponent');
+            toastr()->success('QRIS Berhasil di Aktifkan!');
+        } else {
             toastr()->error('QRIS Gagal di Aktifkan!');
-
         }
     }
 

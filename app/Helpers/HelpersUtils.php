@@ -12,10 +12,20 @@ class HelpersUtils
     public static function convertTimestampToDate($timestamp)
     {
         try {
-            return Carbon::createFromTimestamp($timestamp)->format('d-m-Y H:i');
+            return Carbon::parse($timestamp)->format('Y-m-d H:i');
         } catch (\Exception $e) {
             return '-';
         }
+
+    }
+    public static function convertTimestampToDateTrx($timestamp)
+    {
+        try {
+            return Carbon::parse($timestamp)->format('Y-m-d H:i');
+        } catch (\Exception $e) {
+            return '-';
+        }
+
     }
 
     public static function formatTimestamp($timestamp) {

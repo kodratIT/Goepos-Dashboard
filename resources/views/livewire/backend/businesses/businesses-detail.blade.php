@@ -16,75 +16,78 @@
      </div>
 
      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const activateButton = document.getElementById('activate-button');
+      
 
-            if (activateButton) {
-                activateButton.addEventListener('click', function () {
-                    Swal.fire({
-                        title: 'Apakah Kamu Yakin?',
-                        text: "Kamu Akan Mengaktifkan Metode Pembayaran QRIS!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: 'Tidak',
-                        confirmButtonText: 'Ya'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('activate-button').classList.add('hidden');
-                            document.getElementById('confirm-activate').classList.remove('hidden');
-                            document.getElementById('confirm-activate').click();
-                        }
-                    })
-                });
-            }
 
-            const disabledButtom  = document.getElementById('disabledButtom');
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const activateButton = document.getElementById('activate-button');
 
-            if (disabledButtom) {
-                disabledButtom.addEventListener('click', function () {
-                    Swal.fire({
-                        title: 'Apakah Kamu Yakin?',
-                        text: "Kamu Akan Menonaktifkan Metode Pembayaran Qris",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: 'Tidak',
-                        confirmButtonText: 'Ya'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('disabledButtom').classList.add('hidden');
-                            document.getElementById('disabledButtonloading').classList.remove('hidden');
-                            document.getElementById('disabledButtonloading').click();
-                        }
-                    })
-                });
-            }
-            const activeButtom  = document.getElementById('activeButtom');
+        //     if (activateButton) {
+        //         activateButton.addEventListener('click', function () {
+        //             Swal.fire({
+        //                 title: 'Apakah Kamu Yakin?',
+        //                 text: "Kamu Akan Mengaktifkan Metode Pembayaran QRIS!",
+        //                 icon: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonColor: '#3085d6',
+        //                 cancelButtonColor: '#d33',
+        //                 cancelButtonText: 'Tidak',
+        //                 confirmButtonText: 'Ya'
+        //             }).then((result) => {
+        //                 if (result.isConfirmed) {
+        //                     document.getElementById('activate-button').classList.add('hidden');
+        //                     document.getElementById('confirm-activate').classList.remove('hidden');
+        //                     document.getElementById('confirm-activate').click();
+        //                 }
+        //             })
+        //         });
+        //     }
 
-            if (activeButtom) {
-                activeButtom.addEventListener('click', function () {
-                    Swal.fire({
-                        title: 'Apakah Kamu Yakin?',
-                        text: "Kamu Akan Mengaktifkan Metode Pembayaran Qris",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: 'Tidak',
-                        confirmButtonText: 'Ya'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('activeButtom').classList.add('hidden');
-                            document.getElementById('activeButtonloading').classList.remove('hidden');
-                            document.getElementById('activeButtonloading').click();
-                        }
-                    })
-                });
-            }
-        });
+        //     const disabledButtom  = document.getElementById('disabledButtom');
+
+        //     if (disabledButtom) {
+        //         disabledButtom.addEventListener('click', function () {
+        //             Swal.fire({
+        //                 title: 'Apakah Kamu Yakin?',
+        //                 text: "Kamu Akan Menonaktifkan Metode Pembayaran Qris",
+        //                 icon: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonColor: '#3085d6',
+        //                 cancelButtonColor: '#d33',
+        //                 cancelButtonText: 'Tidak',
+        //                 confirmButtonText: 'Ya'
+        //             }).then((result) => {
+        //                 if (result.isConfirmed) {
+        //                     document.getElementById('disabledButtom').classList.add('hidden');
+        //                     document.getElementById('disabledButtonloading').classList.remove('hidden');
+        //                     document.getElementById('disabledButtonloading').click();
+        //                 }
+        //             })
+        //         });
+        //     }
+        //     const activeButtom  = document.getElementById('activeButtom');
+
+        //     if (activeButtom) {
+        //         activeButtom.addEventListener('click', function () {
+        //             Swal.fire({
+        //                 title: 'Apakah Kamu Yakin?',
+        //                 text: "Kamu Akan Mengaktifkan Metode Pembayaran Qris",
+        //                 icon: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonColor: '#3085d6',
+        //                 cancelButtonColor: '#d33',
+        //                 cancelButtonText: 'Tidak',
+        //                 confirmButtonText: 'Ya'
+        //             }).then((result) => {
+        //                 if (result.isConfirmed) {
+        //                     document.getElementById('activeButtom').classList.add('hidden');
+        //                     document.getElementById('activeButtonloading').classList.remove('hidden');
+        //                     document.getElementById('activeButtonloading').click();
+        //                 }
+        //             })
+        //         });
+        //     }
+        // });
     </script>
     {{-- <div class="container mx-auto p-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">

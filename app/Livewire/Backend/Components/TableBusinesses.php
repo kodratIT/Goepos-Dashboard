@@ -9,8 +9,8 @@ class TableBusinesses extends Component
 {
     public $documents = [];
     public $newDocument = ['name' => ''];
-    public $row = 25;
-    protected $listeners = ['searchUpdated'];
+    public $row = 1;
+    protected $listeners = ['searchUpdated','updatedData'];
 
     public function mount()
     {
@@ -23,10 +23,17 @@ class TableBusinesses extends Component
 
     public function loadDocuments()
     {
+        set_time_limit(300);
         $this->documents = $this->firestore()->getBusinessesAll($this->row);
     }
 
     public function searchUpdated($documents)
+    {
+
+        $this->documents = [];
+        $this->documents = json_decode(json_encode($documents), false);
+    }
+    public function updatedData($documents)
     {
         $this->documents = [];
         $this->documents = json_decode(json_encode($documents), false);

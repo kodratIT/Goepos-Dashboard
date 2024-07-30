@@ -17,6 +17,7 @@ class Widhdrawal extends Component
     public $balanceCheckout;
     public $verify = false;
     public $ownerUid;
+    public $groosAmount;
 
     public function mount($id)
     {
@@ -83,6 +84,7 @@ class Widhdrawal extends Component
         $this->balanceAmount = $data->net_qris_amount;
         $this->balanceCheckout = $data->net_qris_amount;
         $this->feeTrx = $data->fee_qris_amount;
+        $this->groosAmount = $data->groos_qris_amount;
     }
 
     public function createPaymentTransferQris(){
@@ -104,8 +106,6 @@ class Widhdrawal extends Component
 
         if($result){
             return $this->redirect(route('transaction.qris', ['id' => $this->ownerUid]), navigate: true);
-        }else{
-            dd($result);
         }
     }
     public function render()

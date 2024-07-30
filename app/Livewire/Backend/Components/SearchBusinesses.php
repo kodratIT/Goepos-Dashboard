@@ -9,12 +9,25 @@ class SearchBusinesses extends Component
 {
     public $searchTerm = '';
     public $documents = [];
+    public $row = 25;
 
     protected function firestore()
     {
         return new BusinessesModel();
     }
 
+    public function loadDocuments()
+    {
+        $this->documents = $this->firestore()->getBusinessesAll($this->row);
+    }
+
+    public function updateRow($row)
+    {
+        $this->row = $row;
+        $this->loadDocuments();
+        $this->dispatch('updatedData',  $this->documents);
+
+    }
 
     public function searchBusinesses()
     {

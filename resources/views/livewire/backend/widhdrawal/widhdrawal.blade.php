@@ -36,11 +36,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="accountName" class="block font-medium text-gray-700">Name (Toko)</label>
-                                <input type="text" id="accountName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ $document->name }}" disabled />
+                                <input type="text" id="accountName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ isset($document->name) ? $document->name : '-' }}" disabled />
                             </div>
                             <div>
                                 <label for="customerName" class="block font-medium text-gray-700">Name Owner</label>
-                                <input type="text" id="customerName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ $document->name }}" disabled />
+                                <input type="text" id="customerName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ isset($document->name) ? $document->name : '-' }}" disabled />
                             </div>
                             <div>
                                 <label for="email" class="block font-medium text-gray-700">Email</label>
@@ -48,7 +48,7 @@
                             </div>
                             <div>
                                 <label for="phone" class="block font-medium text-gray-700">Phone</label>
-                                <input type="text" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ $document->phone }}" disabled />
+                                <input type="text" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ isset($document->phone) ? $document->phone : '-' }}" disabled />
                             </div>
                         </div>
                     </div>
@@ -109,12 +109,28 @@
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-white dark:bg-gray-800 underline">
+                                        <tr class="bg-white dark:bg-gray-800 ">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                Groos Amount
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Rp.{{ $groosAmount  }}
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white dark:bg-gray-800 ">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 Fee Trx
                                             </th>
                                             <td class="px-6 py-4">
                                                 Rp.{{ $feeTrx  }}
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white dark:bg-gray-800 ">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                Available Amount
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Rp.{{ $balanceAmount  }}
                                             </td>
                                         </tr>
 
@@ -126,10 +142,10 @@
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                     </thead>
                                     <tbody>
-                                        <hr>    
+                                        <hr>
                                         <tr class="bg-white dark:bg-gray-800">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Amount
+                                                Transaksi Amount
                                             </th>
                                             <td class="px-6 py-4">
                                                 Rp.{{ $balanceCheckout }}
