@@ -4,12 +4,12 @@ namespace App\Services;
 
 use DateTime;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use App\Models\StaffModel;
 use Kreait\Firebase\Factory;
 use App\Helpers\HelpersUtils;
-use GuzzleHttp\Promise\settle;
 use App\Models\BusinessesModel;
-use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise;
 use Google\Cloud\Core\Timestamp;
 use Kreait\Firebase\Contract\Firestore;
 
@@ -23,7 +23,136 @@ class ServiceFirestore
     }
 
     // Businesses
+    // public function getBusinessesAll($limit)
+    // {
+    //     try {
+    //         // Calculate the previous month in the format 'YYYY-MM'
+    //         $previousMonth = (new DateTime('first day of last month'))->format('Y-m');
 
+    //         // Calculate the previous day in the format 'YYYY-MM-DD'
+    //         $previousDay = (new DateTime('yesterday'))->format('Y-m-d');
+
+    //         // Fetch business documents
+    //         $documents = $this->firestore->collection("businesses")
+    //             ->where('subscriptionId', '!=', 'goepos_free')
+    //             ->limit($limit)
+    //             ->documents();
+
+    //         $data = [];
+    //         $subscriptionsCache = [];
+
+    //         // Collect ownerUid and subscriptionId pairs
+    //         $batchRequests = [];
+    //         foreach ($documents as $document) {
+    //             if ($document->exists()) {
+    //                 $ownerUid = $document['ownerUid'];
+    //                 $subscriptionId = $document['subscriptionId'];
+    //                 $batchRequests[] = [
+    //                     'ownerUid' => $ownerUid,
+    //                     'subscriptionId' => $subscriptionId,
+    //                     'document' => $document
+    //                 ];
+    //             }
+    //         }
+
+    //         // Initialize Guzzle client
+    //         $client = new Client();
+    //         $promises = [];
+
+    //         foreach ($batchRequests as $request) {
+    //             $ownerUid = $request['ownerUid'];
+    //             $subscriptionId = $request['subscriptionId'];
+
+    //             // Create subscription request
+    //             $promises["{$ownerUid}_{$subscriptionId}"] = $client->getAsync(
+    //                 "https://firestore.googleapis.com/v1/projects/goepos-e9ad5/databases/(default)/documents/businesses/{$ownerUid}/subscriptions/{$subscriptionId}"
+    //             );
+
+    //             // Create monthly report request
+    //             $promises["{$ownerUid}_monthly_report"] = $client->getAsync(
+    //                 "https://firestore.googleapis.com/v1/projects/goepos-e9ad5/databases/(default)/documents/reports/{$ownerUid}/monthly/{$previousMonth}"
+    //             );
+
+    //             // Create daily report request
+    //             $promises["{$ownerUid}_daily_report"] = $client->getAsync(
+    //                 "https://firestore.googleapis.com/v1/projects/goepos-e9ad5/databases/(default)/documents/reports/{$ownerUid}/daily/{$previousDay}"
+    //             );
+    //         }
+
+    //         // Wait for all promises to resolve
+    //         $responses = Promise\settle($promises)->wait();
+
+    //         foreach ($batchRequests as $request) {
+    //             $ownerUid = $request['ownerUid'];
+    //             $subscriptionId = $request['subscriptionId'];
+
+    //             // Process subscription response
+    //             $subscriptionKey = "{$ownerUid}_{$subscriptionId}";
+    //             if (isset($responses[$subscriptionKey]['value']) && $responses[$subscriptionKey]['state'] === 'fulfilled') {
+    //                 $subscriptionResponse = json_decode($responses[$subscriptionKey]['value']->getBody()->getContents(), true);
+    //                 $subscriptionsCache[$ownerUid][$subscriptionId] = $subscriptionResponse['fields'];
+    //             }
+
+    //             $fields = $subscriptionsCache[$ownerUid][$subscriptionId] ?? [];
+    //             $sku = $fields['sku'] ?? null;
+    //             $expiration = isset($fields['expiration']) ? HelpersUtils::formatTimestamp($fields['expiration']) : null;
+
+    //             $mergedDocument = $request['document']->data();
+    //             $mergedDocument['sku'] = $sku;
+    //             $mergedDocument['expiration'] = $expiration;
+    //             $mergedDocument['createdAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['createdAt']);
+    //             // $mergedDocument['updatedAt'] = HelpersUtils::convertTimestampToDate($mergedDocument['updatedAt']) ?? '-';
+
+    //             // Process monthly report response
+    //             $monthlyReportKey = "{$ownerUid}_monthly_report";
+    //             if (isset($responses[$monthlyReportKey]['value']) && $responses[$monthlyReportKey]['state'] === 'fulfilled') {
+    //                 $monthlyReportResponse = json_decode($responses[$monthlyReportKey]['value']->getBody()->getContents(), true);
+    //                 $cardTotal = $monthlyReportResponse['fields']['cardTotal'] ?? 0;
+    //                 $cashTotal = $monthlyReportResponse['fields']['cashTotal'] ?? 0;
+    //                 $qrisTotal = $monthlyReportResponse['fields']['qrisTotal'] ?? 0;
+
+    //                 $numSales = $monthlyReportResponse['fields']['numSales'] ?? 0;
+    //                 $numCredit = $monthlyReportResponse['fields']['numCredit'] ?? 0;
+    //                 $numQris = $monthlyReportResponse['fields']['numQris'] ?? 0;
+    //                 $numReturn = $monthlyReportResponse['fields']['numReturn'] ?? 0;
+
+    //                 $mergedDocument['totalTrxQtyMonth'] = ($numQris + $numSales + $numCredit) - $numReturn;
+    //                 $mergedDocument['totalTrxMonth'] = $cardTotal + $cashTotal + $qrisTotal;
+    //             } else {
+    //                 $mergedDocument['totalTrxMonth'] = 0;
+    //                 $mergedDocument['totalTrxQtyMonth'] = 0;
+    //             }
+
+    //             // Process daily report response
+    //             $dailyReportKey = "{$ownerUid}_daily_report";
+    //             if (isset($responses[$dailyReportKey]['value']) && $responses[$dailyReportKey]['state'] === 'fulfilled') {
+    //                 $dailyReportResponse = json_decode($responses[$dailyReportKey]['value']->getBody()->getContents(), true);
+    //                 $dailyCardTotal = $dailyReportResponse['fields']['cardTotal'] ?? 0;
+    //                 $dailyCashTotal = $dailyReportResponse['fields']['cashTotal'] ?? 0;
+    //                 $dailyQrisTotal = $dailyReportResponse['fields']['qrisTotal'] ?? 0;
+
+    //                 $dailyNumSales = $dailyReportResponse['fields']['numSales'] ?? 0;
+    //                 $dailyNumCredit = $dailyReportResponse['fields']['numCredit'] ?? 0;
+    //                 $dailyNumQris = $dailyReportResponse['fields']['numQris'] ?? 0;
+    //                 $dailyNumReturn = $dailyReportResponse['fields']['numReturn'] ?? 0;
+
+    //                 $mergedDocument['totalTrxQtyDay'] = ($dailyNumQris + $dailyNumSales + $dailyNumCredit) - $dailyNumReturn;
+    //                 $mergedDocument['totalTrxDay'] = $dailyCardTotal + $dailyCashTotal + $dailyQrisTotal;
+    //             } else {
+    //                 $mergedDocument['totalTrxDay'] = 0;
+    //                 $mergedDocument['totalTrxQtyDay'] = 0;
+    //             }
+
+    //             // Add the merged document to the data array
+    //             $data[] = $mergedDocument;
+    //         }
+
+    //         return json_decode(json_encode($data), false);
+    //     } catch (Exception $e) {
+    //         Log::error('Error fetching businesses: ' . $e->getMessage());
+    //         return [];
+    //     }
+    // }
     public function getBusinessesAll($limit)
     {
         try {
