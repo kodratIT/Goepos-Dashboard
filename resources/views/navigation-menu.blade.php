@@ -17,7 +17,8 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('businesses') }}" :active="request()->routeIs('businesses')" wire:navigate.hover>
+                    <x-nav-link href="{{ route('businesses') }}" :active="request()->routeIs('businesses')" >
+                    {{-- <x-nav-link href="{{ route('businesses') }}" :active="request()->routeIs('businesses')" wire:navigate.hover> --}}
                         {{ __('Businesses') }}
                     </x-nav-link>
                 </div>

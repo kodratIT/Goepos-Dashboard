@@ -38,9 +38,16 @@
                                 <label for="filter-radio-example-4" class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">100</label>
                             </div>
                         </li>
+                        <li wire:click="updateRow(1000)">
+                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <input id="filter-radio-example-4" type="radio" value="100" name="filter-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="filter-radio-example-4" class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Semua Data</label>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
+
             <div class="pb-4 py-5 bg-white dark:bg-gray-900">
                 <div class="flex items-center relative mb-1">
                     <input type="text" wire:model.debounce.300ms="searchTerm" id="table-search" class="form-input w-full block p-2 pl-2 text-left text-sm text-gray-900 border border-gray-300 rounded-l-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email Businesses">

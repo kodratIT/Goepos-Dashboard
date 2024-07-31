@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Services\RequestApi;
 use Google\Cloud\Core\Timestamp;
 use App\Services\ServiceFirestore;
+use App\Services\ServiceCloudFunction;
 use Illuminate\Database\Eloquent\Model;
 use Kreait\Firebase\Contract\Firestore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,11 +16,13 @@ class BusinessesModel extends Model
     use HasFactory;
 
     protected $firestore;
+    protected $function;
     protected $requestApi;
 
     public function __construct()
     {
         $this->firestore = new ServiceFirestore();
+        $this->function = new ServiceCloudFunction();
         $this->requestApi = new RequestApi();
 
     }
@@ -68,6 +71,12 @@ class BusinessesModel extends Model
 
     public function getBankAccount($ownerUid){
         return $this->firestore->getBankAccount($ownerUid);
+    }
+
+    // cloud function
+    public function getBusinessesAllbyCf($limit)
+    {
+        return $this->function->getBussinessesAll($limit);
     }
 
 

@@ -23,8 +23,7 @@ class TableBusinesses extends Component
 
     public function loadDocuments()
     {
-        set_time_limit(300);
-        $this->documents = $this->firestore()->getBusinessesAll($this->row);
+        $this->documents  = $this->firestore()->getBusinessesAllbyCf($this->row);
     }
 
     public function searchUpdated($documents)

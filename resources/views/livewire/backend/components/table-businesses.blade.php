@@ -79,11 +79,11 @@
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->sku ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->expiration ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">-</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ \App\Helpers\HelpersUtils::formatRupiah($document->totalTrxMonth) ?? '-' }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxMonth ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyMonth ?? '-' }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ \App\Helpers\HelpersUtils::formatRupiah($document->totalTrxDay) ?? '-' }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxDay ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyDay ?? '-' }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ isset($document->updatedAt) ? \App\Helpers\HelpersUtils::convertTimestampToDate($document->updatedAt) : '-' }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ isset($document->createdAt) ? $document->createdAt : '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-right">
                                     <a wire:navigate href="{{ route('businesses.detail', ['id' => $document->ownerUid]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</a>
                                 </td>

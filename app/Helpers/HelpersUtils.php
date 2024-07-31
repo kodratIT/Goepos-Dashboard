@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use DateTime;
+use DateTimeZone;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 
@@ -34,6 +35,36 @@ class HelpersUtils
 
         // return $date->format('d-m-Y H:i:s');
         return $date->format('d-m-Y');
+    }
+
+    public static function convertTimestamp($timestamp) {
+        // Pastikan timestamp dalam milidetik dikonversi ke detik
+        $timestampInSeconds = $timestamp / 1000;
+
+        // Buat objek DateTime dari timestamp
+        $dateTime = new DateTime("@$timestampInSeconds");
+
+        // Tentukan timezone jika diperlukan, misalnya 'Asia/Jakarta'
+        $dateTime->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+        // Format tanggal sesuai keinginan
+        return $dateTime->format('Y-m-d H:i');
+    }
+
+    public static function convertFirestoreTimestamp($timestamp) {
+        // Konversi _seconds dan _nanoseconds menjadi detik penuh
+        // dd($timestamp);
+        $seconds = $timestamp->_seconds;
+        $nanoseconds = $timestamp->_nanoseconds;
+
+        // Buat objek DateTime dari timestamp
+        $dateTime = new DateTime("@$seconds");
+
+        // Tentukan timezone jika diperlukan, misalnya 'Asia/Jakarta'
+        $dateTime->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+        // Format tanggal sesuai keinginan
+        return $dateTime->format('Y-m-d H:i');
     }
 
     public static function formatRupiah($value)

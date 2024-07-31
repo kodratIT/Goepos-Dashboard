@@ -10,7 +10,7 @@
                         <th scope="col" class="px-6 py-3">Fee Amount</th>
                         <th scope="col" class="px-6 py-3">Status</th>
                         <th scope="col" class="px-6 py-3">CreatedAt</th>
-                        <th scope="col" class="px-6 py-3">Description</th>
+                        <th scope="col" class="px-6 py-3 ">Description</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +27,7 @@
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap @if($transaction->status == 'expired') text-red-600 @elseif($transaction->status == 'processing') text-yellow-900 @else text-green-600 font-bold @endif">{{ $transaction->status }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ \App\Helpers\HelpersUtils::convertTimestampToDateTrx($transaction->createdAt) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">@if($transaction->status == 'paid') Fee Transaction {{ $transaction->feePercent }}% @elseif($transaction->status == 'completed') Penarikan Saldo @else - @endif</td>
+                                <td class="px-6 py-4 whitespace-nowrap">@if($transaction->status == 'paid') Fee Transaction {{ $transaction->feePercent }}% @elseif($transaction->status == 'completed') {{ $transaction->description }} @else - @endif</td>
                             </tr>
                         @endforeach
                     @else

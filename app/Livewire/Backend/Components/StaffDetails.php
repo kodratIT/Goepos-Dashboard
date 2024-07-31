@@ -33,6 +33,7 @@ class StaffDetails extends Component
         $this->ownerUid = $ownerUid;
         $this->getBankAccount($ownerUid);
         $this->refreshData();
+        $this->dispatch('documentsLoaded');
     }
 
     public function bankSaved($status)
@@ -47,7 +48,7 @@ class StaffDetails extends Component
         $this->getBussinesDetailByOwnerUid($this->ownerUid);
         $this->getPaymentMethod($this->ownerUid);
         $this->getNetAmountQris($this->ownerUid);
-        $this->dispatch('documentsLoaded'); // Emit event setelah data dimuat
+        $this->dispatch('documentsLoaded'); 
     }
 
     public function getPaymentMethod()

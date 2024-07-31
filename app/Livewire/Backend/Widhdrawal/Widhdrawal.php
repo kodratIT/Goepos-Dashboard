@@ -32,6 +32,8 @@ class Widhdrawal extends Component
             $this->balanceAmount =  $this->balanceCheckout;
             $this->clearSession();
         }
+        $this->dispatch('documentsLoaded');
+
         // }else{
         //     if(Session::get('verify') != null)
         //     return redirect()->route('transaction.qris', ['id' => $this->ownerUid]);
@@ -55,6 +57,8 @@ class Widhdrawal extends Component
     public function updateBalance($newValue)
     {
         $this->balanceCheckout = $newValue;
+        $this->dispatch('documentsLoaded');
+
     }
     protected function firestore()
     {
@@ -106,6 +110,10 @@ class Widhdrawal extends Component
 
         if($result){
             return $this->redirect(route('transaction.qris', ['id' => $this->ownerUid]), navigate: true);
+            toastr()->success('Penarikan Saldo Berhasil di Buat');
+        }else{
+            toastr()->success('Penarikan Saldo Gagal di Buat');
+
         }
     }
     public function render()

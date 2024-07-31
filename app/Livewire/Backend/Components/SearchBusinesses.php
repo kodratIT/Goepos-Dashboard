@@ -18,15 +18,15 @@ class SearchBusinesses extends Component
 
     public function loadDocuments()
     {
-        $this->documents = $this->firestore()->getBusinessesAll($this->row);
+        $this->documents  = $this->firestore()->getBusinessesAllbyCf($this->row);
+
     }
 
     public function updateRow($row)
     {
         $this->row = $row;
-        // $this->loadDocuments();
-        // $this->dispatch('updatedData',  $this->documents);
-
+        $this->loadDocuments();
+        $this->dispatch('updatedData',  $this->documents);
     }
 
     public function searchBusinesses()

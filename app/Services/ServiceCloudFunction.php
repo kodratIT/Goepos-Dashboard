@@ -49,5 +49,36 @@ class ServiceCloudFunction
             ], 500);
         }
 
-}
+    }
+
+    public function getBussinessesAll($limit){
+        try {
+            $client = new Client();
+            if($limit != 1000){
+                $response = $client->request('GET', 'https://us-central1-goepos-e9ad5.cloudfunctions.net/dashboard', [
+                    'query' => ['limit' => $limit]
+                ]);
+            }else{
+                $response = $client->request('GET', 'https://us-central1-goepos-e9ad5.cloudfunctions.net/dashboard', [
+                    'query' => ['limit' => 99999999999]
+                ]);
+            }
+
+
+            $statusCode = $response->getStatusCode();
+            $responseBody = json_decode($response->getBody(), true);
+
+            if ($statusCode == 200) {
+                return json_decode(json_encode($responseBody), false);
+                // return response()->json(['data' => $responseBody], $statusCode);
+            } else {
+                return response()->json(['success' => false, 'data' => $responseBody], $statusCode);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+    }
 }
