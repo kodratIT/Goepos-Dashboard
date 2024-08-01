@@ -33,11 +33,6 @@ class Widhdrawal extends Component
             $this->clearSession();
         }
         $this->dispatch('documentsLoaded');
-
-        // }else{
-        //     if(Session::get('verify') != null)
-        //     return redirect()->route('transaction.qris', ['id' => $this->ownerUid]);
-        // }
     }
 
     public function clearSession(){
@@ -49,7 +44,7 @@ class Widhdrawal extends Component
     public function verifyWd(){
         Session::put('verify',true);
         Session::put('balanceCheckout',$this->balanceCheckout);
-
+        $this->dispatch('documentsLoaded');
         return $this->redirect(route('widhdrawal.qris.verify', ['id' => $this->ownerUid]), navigate: true);
     }
 
@@ -57,8 +52,6 @@ class Widhdrawal extends Component
     public function updateBalance($newValue)
     {
         $this->balanceCheckout = $newValue;
-        $this->dispatch('documentsLoaded');
-
     }
     protected function firestore()
     {

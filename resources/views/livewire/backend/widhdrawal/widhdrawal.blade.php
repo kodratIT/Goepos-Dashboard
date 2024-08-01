@@ -221,7 +221,7 @@
                 finish.addEventListener('click', function() {
                     Swal.fire({
                         title: 'Apakah Kamu Yakin?',
-                        text: "Kamu Akan Mengaktifkan Metode Pembayaran QRIS!",
+                        text: "Kamu Akan Melakukan Penarikan Saldo Qris !",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
