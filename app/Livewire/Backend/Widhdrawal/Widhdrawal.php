@@ -31,13 +31,17 @@ class Widhdrawal extends Component
             $this->balanceCheckout = Session::get('balanceCheckout');
             $this->balanceAmount =  $this->balanceCheckout;
             $this->clearSession();
+            $this->dispatch('documentsLoaded');
         }
         $this->dispatch('documentsLoaded');
+
     }
 
     public function clearSession(){
         Session::forget('verify');
         Session::forget('balanceCheckout');
+        $this->dispatch('documentsLoaded');
+
     }
 
 
@@ -45,6 +49,7 @@ class Widhdrawal extends Component
         Session::put('verify',true);
         Session::put('balanceCheckout',$this->balanceCheckout);
         $this->dispatch('documentsLoaded');
+
         return $this->redirect(route('widhdrawal.qris.verify', ['id' => $this->ownerUid]), navigate: true);
     }
 
@@ -52,6 +57,8 @@ class Widhdrawal extends Component
     public function updateBalance($newValue)
     {
         $this->balanceCheckout = $newValue;
+        $this->dispatch('documentsLoaded');
+
     }
     protected function firestore()
     {
@@ -111,6 +118,7 @@ class Widhdrawal extends Component
     }
     public function render()
     {
+        
         return view('livewire.backend.widhdrawal.widhdrawal')->layout('layouts.app');
     }
 }
