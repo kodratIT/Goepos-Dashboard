@@ -40,6 +40,7 @@ class StaffDetails extends Component
     {
         $this->is_bankActive = false;
         $this->refreshData();
+
     }
 
     public function refreshData()
@@ -48,7 +49,7 @@ class StaffDetails extends Component
         $this->getBussinesDetailByOwnerUid($this->ownerUid);
         $this->getPaymentMethod($this->ownerUid);
         $this->getNetAmountQris($this->ownerUid);
-        $this->dispatch('documentsLoaded'); 
+        $this->dispatch('documentsLoaded');
     }
 
     public function getPaymentMethod()

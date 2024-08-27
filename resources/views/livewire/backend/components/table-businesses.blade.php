@@ -52,6 +52,7 @@
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">No</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Name</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Email</th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">Qris</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">City</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Phone</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Product</th>
@@ -74,6 +75,21 @@
                                     {{ $document->name ?? '-' }}
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap ">{{ $document->email ?? '-' }}</td>
+
+                                <td class="px-4 py-3 whitespace-nowrap ">
+                                    @if(isset($document->qris->activationStatus) && $document->qris->activationStatus === 'active')
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">Active</span>
+                                    @elseif (isset($document->qris->activationStatus) && $document->qris->activationStatus === 'verifying')
+                                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-400 border border-yellow-400">verifying</span>
+                                    @elseif(isset($document->qris->activationStatus) && $document->qris->activationStatus === 'rejected')
+                                        <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">Rejected</span>
+
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+
+
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->location->city ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->phone ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->sku ?? '-' }}</td>
@@ -85,7 +101,7 @@
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyDay ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ isset($document->createdAt) ? $document->createdAt : '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-right">
-                                    <a wire:navigate href="{{ route('businesses.detail', ['id' => $document->ownerUid]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</a>
+                                    <a  href="{{ route('businesses.detail', ['id' => $document->ownerUid]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</a>
                                 </td>
                             </tr>
                         @endforeach

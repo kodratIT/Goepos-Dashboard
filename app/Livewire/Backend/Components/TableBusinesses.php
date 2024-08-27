@@ -24,6 +24,7 @@ class TableBusinesses extends Component
     public function loadDocuments()
     {
         $this->documents  = $this->firestore()->getBusinessesAllbyCf($this->row);
+        // dd($this->documents);
     }
 
     public function searchUpdated($documents)

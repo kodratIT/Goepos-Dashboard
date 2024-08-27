@@ -470,6 +470,29 @@ class ServiceFirestore
             return json_decode(json_encode([]), false);
         }
     }
+    public function getSubmissionByOwnerUid($ownerUid)
+    {
+        try {
+            $collection = $this->firestore->collection("bankAccounts")->document($ownerUid)->collection('submission');
+            $documents = $collection->documents();
+
+            $data = [];
+            foreach ($documents as $document) {
+                if ($document->exists()) {
+                    $data[] = [
+                        'id' => $document->id(),  // ID dokumen
+                        'data' => $document->data()  // Data dokumen
+                    ];
+                }
+            }
+            return json_decode(json_encode($data), false);
+        } catch (Exception $e) {
+            // Tangani kesalahan jika ada
+            // Log::error('Error fetching submission by owner UID: ' . $e->getMessage());
+            return json_decode(json_encode([]), false);
+        }
+    }
+
 
 
     public function activateQris($ownerUid, $timestamp,$paymentMethod)
@@ -482,7 +505,7 @@ class ServiceFirestore
                 'name' => 'QRIS',
                 'type' => 'qris',
             ],
-            'createdAt' => new Timestamp($timestamp),
+            // 'createdAt' => new Timestamp($timestamp),
             'deletedAt' => null,
             'enabledByGoePos' => true,
             'enabledByOwner' => true,
@@ -495,6 +518,7 @@ class ServiceFirestore
             'groos_qris_amount' => 0,
             'fee_qris_amount' => 0,
             'settlement_qris_amount' => 0,
+            'pending_qris_amount' => 0,
             'ownerUid' => $ownerUid,
             'createdAt' => new Timestamp($timestamp),
         ];
@@ -513,8 +537,57 @@ class ServiceFirestore
             return 'Error updating document: ' . $e->getMessage();
         }
     }
+    public function activateQrisBaru($ownerUid, $timestamp,$paymentMethod,$submission_id)
+    {
+        $qris = [
+            'activationStatus' => 'active',
+            'activationStatusNote' => 'Syarat Terpenuhi',
+            'activeAt' => new Timestamp($timestamp),
+            'category' => [
+                'name' => 'QRIS',
+                'type' => 'qris',
+            ],
+            // 'createdAt' => new Timestamp($timestamp),
+            'deletedAt' => null,
+            'enabledByGoePos' => true,
+            'enabledByOwner' => true,
+            'id'   => $paymentMethod,
+            'name' => 'QRIS'
+        ];
 
-    public function createBankAccount($ownerUid,$data){
+        $referencePayment = [
+            'net_qris_amount' => 0,
+            'groos_qris_amount' => 0,
+            'fee_qris_amount' => 0,
+            'settlement_qris_amount' => 0,
+            'pending_qris_amount' => 0,
+            'ownerUid' => $ownerUid,
+            'createdAt' => new Timestamp($timestamp),
+        ];
+
+        try {
+            $this->firestore->collection('businesses')->document($ownerUid)->update([
+                ['path' => 'qris', 'value' => $qris]
+            ]);
+
+            $this->firestore->collection('referencePayment')
+                    ->document($ownerUid)
+                    ->set($referencePayment);
+
+            $this->firestore->collection('bankAccounts')->document($ownerUid)
+                    ->collection('submission')
+                    ->document($submission_id)
+                    ->update([
+                        ['path' => 'status', 'value' => 'active']
+                    ]);
+
+            return 'Document updated successfully.';
+        } catch (\Exception $e) {
+            return 'Error updating document: ' . $e->getMessage();
+        }
+    }
+
+    public function createBankAccount($ownerUid,$data,$paymentId,$submission_id){
 
         $bankAccount = [
             'ownerUid' => $ownerUid,
@@ -523,11 +596,15 @@ class ServiceFirestore
             'nameAccount' => $data['nameAccount'],
         ];
 
+        $timestamp = Carbon::now();
+
         try {
 
             $this->firestore->collection('bankAccounts')
                     ->document($ownerUid)
                     ->set($bankAccount);
+
+            $this->activateQrisBaru($ownerUid,$timestamp,$paymentId,$submission_id);
 
             return 'Document updated successfully.';
         } catch (\Exception $e) {
@@ -541,20 +618,28 @@ class ServiceFirestore
             $document = $this->firestore->collection('bankAccounts')->document($ownerUid)->snapshot();
 
             if ($document->exists()) {
-                $data = [
-                    'bankType' => $document->data()['bankType'],
-                    'accountNumber' => aes256Decrypt($document->data()['accountNumber'], config('services.secretKeyBank.secretKey')),
-                    'nameAccount' => $document->data()['nameAccount'],
-                ];
+                // Cek apakah 'bankType' ada dan telah didefinisikan
+                if (isset($document->data()['bankType'])) {
+                    $data = [
+                        'bankType' => $document->data()['bankType'],
+                        'accountNumber' => aes256Decrypt($document->data()['accountNumber'], config('services.secretKeyBank.secretKey')),
+                        'nameAccount' => $document->data()['nameAccount'],
+                    ];
 
-                // Convert array to object
-                return json_decode(json_encode($data));
+                    // Convert array to object dan kembalikan data
+                    return json_decode(json_encode($data));
+                } else {
+                    return false;  // Jika 'bankType' undefined, kembalikan false
+                }
             } else {
-                return false;
+                return false;  // Jika dokumen tidak ada, kembalikan false
             }
         } catch (\Exception $e) {
+            // Kembalikan pesan error jika terjadi exception
             return 'Error getting document: ' . $e->getMessage();
         }
+
+
 
     }
 
@@ -585,6 +670,35 @@ class ServiceFirestore
         }
 
     }
+
+    public function rejectSubmission($ownerUid, $submission_id)
+    {
+        try {
+            // Update status pengajuan menjadi 'rejected'
+            $this->firestore->collection('bankAccounts')->document($ownerUid)
+                ->collection('submission')
+                ->document($submission_id)
+                ->update([
+                    ['path' => 'status', 'value' => 'rejected']
+                ]);
+
+            // Update status aktivasi QRIS menjadi 'rejected' dengan catatan
+            $this->firestore->collection('businesses')->document($ownerUid)
+                ->update([
+                    ['path' => 'qris.activationStatus', 'value' => 'rejected'],
+                    ['path' => 'qris.activationStatusNote', 'value' => 'Nama yang tercantum di KTP tidak sama']
+                ]);
+
+            return true;
+        } catch (\Exception $e) {
+            // Sebaiknya tambahkan logging untuk pengecualian jika perlu
+            // Log::error('Error disabling QRIS: ' . $e->getMessage());
+
+            return 'Error disabling QRIS: ' . $e->getMessage();
+        }
+    }
+
+
 
     // End Businesses
 

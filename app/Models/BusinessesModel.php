@@ -52,6 +52,10 @@ class BusinessesModel extends Model
     {
         return  $this->firestore->getStaffByOwnerUid($ownerUid);
     }
+    public function getSubmissionByOwnerUid($ownerUid)
+    {
+        return  $this->firestore->getSubmissionByOwnerUid($ownerUid);
+    }
     public function activateQris($ownerUid, $timestamp,$paymentMethod)
     {
         return  $this->firestore->activateQris($ownerUid, $timestamp,$paymentMethod);
@@ -65,15 +69,17 @@ class BusinessesModel extends Model
         return  $this->firestore->activedQrisByGoepos($ownerUid);
     }
 
-    public function createBankAccount($ownerUid, $data){
-        return $this->firestore->createBankAccount($ownerUid, $data);
+    public function createBankAccount($ownerUid, $data,$paymentId,$submisssion_id){
+        return $this->firestore->createBankAccount($ownerUid, $data,$paymentId,$submisssion_id);
     }
 
     public function getBankAccount($ownerUid){
         return $this->firestore->getBankAccount($ownerUid);
     }
+    public function rejectSubmission($ownerUid,$submisssion_id){
+        return $this->firestore->rejectSubmission($ownerUid,$submisssion_id);
+    }
 
-    // cloud function
     public function getBusinessesAllbyCf($limit)
     {
         return $this->function->getBussinessesAll($limit);

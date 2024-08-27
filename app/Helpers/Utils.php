@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 function aes256Encrypt($text, $secretKey)
 {
     $key = adjustKeyLength($secretKey); // Ensure the key is 32 bytes
@@ -37,7 +39,12 @@ function adjustKeyLength($key)
 }
 
 
-function convertTimestampToDate($timestamp)
+function convertIsoToCustomDate($isoDate, $timezone = 'Asia/Jakarta')
 {
-    return Carbon::createFromTimestamp($timestamp)->toDateString();
+    // Mengubah ISO 8601 date menjadi objek Carbon dan menetapkan timezone Jakarta
+    $date = Carbon::parse($isoDate)->setTimezone($timezone);
+
+    // Mengembalikan dalam format yang diinginkan, misalnya 'Y-m-d H:i:s'
+    return $date->format('Y-m-d H:i:s');
 }
+
