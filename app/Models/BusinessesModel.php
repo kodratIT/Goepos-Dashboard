@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Services\RequestApi;
+use App\Services\ServiceStorage;
 use Google\Cloud\Core\Timestamp;
 use App\Services\ServiceFirestore;
 use App\Services\ServiceCloudFunction;
@@ -83,6 +84,10 @@ class BusinessesModel extends Model
     public function getBusinessesAllbyCf($limit)
     {
         return $this->function->getBussinessesAll($limit);
+    }
+
+    public function getImagesBusinessesCf($path){
+        return $this->function->getImagesBusinesses($path);
     }
 
 

@@ -20,6 +20,7 @@ class BankAccountForm extends Component
     public $namaRekening;
     public $phone;
     public $paymentId;
+    public $image =null;
 
     public $isSaving = false;
     public $ownerUid;
@@ -73,13 +74,14 @@ class BankAccountForm extends Component
     public function getSubmissionByOwnerUid()
     {
         $query = $this->firestore()->getSubmissionByOwnerUid($this->ownerUid);
+        $this->submissionHistory =  $query;
+
         foreach ($query as $submission) {
             if ($submission->data->status === 'verifying') {
+                $this->submission =null;
                 $this->submission = $submission;
             }
         }
-        $this->submissionHistory =  $query;
-
         if(isset($this->submission->data) && $this->submission->data !== []){
             $this->submission_id = $this->submission->id;
             $this->paymentId = $this->submission->data->paymentId;
@@ -91,7 +93,12 @@ class BankAccountForm extends Component
             $this->status_pengajuan = $this->submission->data->status;
             $this->namaRekening=$this->submission->data->bankAccountName;
             $this->phone =$this->submission->data->phone;
+
+            $decryptPath = aes256Decrypt($this->submission->data->image,config('services.secretKeyImage.secretKey'));
+            $this->image = $this->firestore()->getImagesBusinessesCf($decryptPath);
+
         }
+
 
 
     }

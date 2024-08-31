@@ -46,7 +46,7 @@
                     <label for="status_pengajuan"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kartu Tanda
                         Pengenal</label>
-                    <img src="{{ $submission->data->image }}" alt="Kartu Tanda Pengenal"
+                    <img src="{{ $image }}" alt="Kartu Tanda Pengenal"
                         class="w-full h-96 object-cover rounded-lg">
                 </div>
             </div>

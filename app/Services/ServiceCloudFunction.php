@@ -81,4 +81,24 @@ class ServiceCloudFunction
         }
 
     }
+    public function getImagesBusinesses($path){
+        try {
+            $client = new Client();
+
+            $response = $client->request('GET', 'https://us-central1-goepos-e9ad5.cloudfunctions.net/getImagesDashboard', [
+                'query' => ['path' => $path]
+            ]);
+
+
+            $responseBody = json_decode($response->getBody(), true);
+
+            return json_decode(json_encode($responseBody['signedUrl']), false);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+    }
 }

@@ -40,6 +40,12 @@ return [
     ],
     'secretKeyBank' => [
         'secretKey' => 'Goe-Pos-2024',
+    ],
+    'secretKeyImage' => [
+        'secretKey' => '530b0e821ca1bd5942da65355c12e45b',
+    ],
+    'serviceAccountKey' => [
+        'secretKey' => env('FIREBASE_CREDENTIALS'),
     ]
 
 ];
