@@ -398,6 +398,16 @@ class ServiceFirestore
                 $mergedDocument['totalTrxQtyDay'] = 0;
             }
 
+            $lastLogin = $this->firestore->collection('reports')
+                ->document($ownerUid)
+                ->snapshot();
+
+            if ($lastLogin->exists() && isset($lastLogin['updatedAt'])) {
+                $mergedDocument['lastLogin'] = HelpersUtils::convertTimestampToDate($lastLogin['updatedAt']);
+            } else {
+                $mergedDocument['lastLogin'] = null;
+            }
+
             $data[] = $mergedDocument;
         }
 

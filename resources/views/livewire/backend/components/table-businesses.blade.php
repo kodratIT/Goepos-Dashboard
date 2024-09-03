@@ -94,7 +94,7 @@
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->phone ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->sku ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->expiration ?? '-' }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">-</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $document->lastLogin }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxMonth ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyMonth ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxDay ?? '-' }}</td>

@@ -13,12 +13,14 @@ class HelpersUtils
     public static function convertTimestampToDate($timestamp)
     {
         try {
-            return Carbon::parse($timestamp)->format('Y-m-d H:i');
+            return Carbon::parse($timestamp)
+                ->setTimezone('Asia/Jakarta')  // Mengatur zona waktu ke UTC+7 (Jakarta)
+                ->format('Y-m-d H:i');
         } catch (\Exception $e) {
             return '-';
         }
-
     }
+
     public static function convertTimestampToDateTrx($timestamp)
     {
         try {
