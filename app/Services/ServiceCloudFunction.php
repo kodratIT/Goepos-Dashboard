@@ -67,7 +67,6 @@ class ServiceCloudFunction
 
             $statusCode = $response->getStatusCode();
             $responseBody = json_decode($response->getBody(), true);
-
             if ($statusCode == 200) {
                 return json_decode(json_encode($responseBody), false);
                 // return response()->json(['data' => $responseBody], $statusCode);

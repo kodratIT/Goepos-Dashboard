@@ -53,11 +53,11 @@
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Name</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Email</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Qris</th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Login</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">City</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Phone</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Product</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Expiration</th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Login</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Month Trx</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Month QTY Trx</th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Day Trx</th>
@@ -89,12 +89,14 @@
                                     @endif
                                 </td>
 
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $document->lastLogin }}</td>
+
+
 
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->location->city ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->phone ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->sku ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->expiration ?? '-' }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ $document->lastLogin }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxMonth ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxQtyMonth ?? '-' }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ $document->totalTrxDay ?? '-' }}</td>

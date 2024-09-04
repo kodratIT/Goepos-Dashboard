@@ -48,3 +48,19 @@ function convertIsoToCustomDate($isoDate, $timezone = 'Asia/Jakarta')
     return $date->format('Y-m-d H:i:s');
 }
 
+function convertTimestampToDate($timestamp) {
+    // Konversi _seconds dan _nanoseconds menjadi detik penuh
+    // dd($timestamp);
+    $seconds = $timestamp->_seconds;
+    $nanoseconds = $timestamp->_nanoseconds;
+
+    // Buat objek DateTime dari timestamp
+    $dateTime = new DateTime("@$seconds");
+
+    // Tentukan timezone jika diperlukan, misalnya 'Asia/Jakarta'
+    $dateTime->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+    // Format tanggal sesuai keinginan
+    return $dateTime->format('Y-m-d H:i');
+}
+

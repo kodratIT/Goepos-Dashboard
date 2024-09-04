@@ -25,6 +25,7 @@ class TableBusinesses extends Component
     {
         $this->documents  = $this->firestore()->getBusinessesAllbyCf($this->row);
         // dd($this->documents);
+
     }
 
     public function searchUpdated($documents)
@@ -32,6 +33,7 @@ class TableBusinesses extends Component
 
         $this->documents = [];
         $this->documents = json_decode(json_encode($documents), false);
+
     }
     public function updatedData($documents)
     {
