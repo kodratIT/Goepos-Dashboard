@@ -83,6 +83,7 @@
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3">CreatedAt</th>
                         <th class="px-6 py-3">Description</th>
+                        <th  class="px-6 py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,15 +94,20 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerUID ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerEmail ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->userName ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap @if (($transaction->status ?? '') == 'paid') text-green-600 font-bold @endif">
+                        <td class="px-6 py-4 whitespace-nowrap @if (in_array($transaction->status ?? '', ['paid', 'completed'])) text-green-600 font-bold @endif">
                             + Rp.{{ number_format($transaction->totalGroosAmount ?? 0) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap @if (($transaction->status ?? '') == 'paid') text-red-600 @endif">
+                        <td class="px-6 py-4 whitespace-nowrap @if (in_array($transaction->status ?? '', ['paid', 'completed'])) text-red-600 font-bold @endif">
                             -Rp.{{ number_format($transaction->totalfeeTrx ?? 0) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap @if (($transaction->status ?? '') == 'paid') text-green-600 font-bold @endif">{{ ucfirst($transaction->status ?? '-') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap @if (in_array($transaction->status ?? '', ['paid', 'completed'])) text-green-600 font-bold @endif">
+                            {{ in_array($transaction->status ?? '', ['paid', 'completed']) ? 'Completed' : ucfirst($transaction->status ?? '-') }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ formatTanggal($transaction->createdAt ?? '-') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->description ?? '-' }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-right">
+                            <a  href="{{ route('businesses.detail', ['id' => $transaction->ownerUID]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail Businesess</a>
+                        </td>
                     </tr>
 
                     @empty

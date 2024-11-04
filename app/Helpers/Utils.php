@@ -64,16 +64,18 @@ function convertTimestampToDate($timestamp) {
     return $dateTime->format('Y-m-d H:i');
 }
 
+
 function formatTanggal($dateString = '-')
 {
     // Pastikan input berupa format yang valid, lalu konversi menggunakan Carbon
     try {
-        $date = Carbon::parse($dateString, 'Asia/Jakarta'); // Parsing tanggal dengan zona waktu GMT+7
+        $date = Carbon::parse($dateString)->addHours(7); // Menambahkan 7 jam
         return $date->format('Y-m-d H:i'); // Format menjadi '2024-10-30 09:19'
     } catch (\Exception $e) {
         // Jika parsing gagal, kembalikan nilai default '-'
         return '-';
     }
 }
+
 
 
