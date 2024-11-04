@@ -14,7 +14,7 @@ class Table extends Component
     use WithPagination;
 
     public $perPage = 5;
-    public $perPageOptions = [5, 10, 15, 20, 50, 100];
+    public $perPageOptions = [5, 10, 15, 20, 50, 100,250,500,1000];
     public $search = '';
     public $sortBy = 'id';
     public $sortDirection = 'asc';
