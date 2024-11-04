@@ -742,6 +742,45 @@ class ServiceFirestore
 
     }
 
+
+    public function getAllTransactionQris($limit = 50, $startAfter = null)
+    {
+        try {
+            // Mendapatkan referensi koleksi 'qris' dan mengurutkan berdasarkan ID dokumen secara descending
+            $collectionReference = $this->firestore->collection("referenceWebhook")
+                                                   ->document("transactions")
+                                                   ->collection("qris")
+                                                   ->orderBy('id', 'DESC') // Mengurutkan berdasarkan ID dokumen
+                                                   ->limit($limit); // Batasi jumlah dokumen
+
+            // Jika menggunakan pagination, mulai setelah ID tertentu
+            if ($startAfter) {
+                $collectionReference = $collectionReference->startAfter($startAfter);
+            }
+
+            $documents = $collectionReference->documents();
+
+            // Inisialisasi array untuk menampung data
+            $data = [];
+            foreach ($documents as $document) {
+                if ($document->exists()) {
+                    $data[] = $document->data();
+                }
+            }
+
+            // Kembalikan data sebagai objek JSON
+            return (object) ['data' => $data];
+        } catch (Exception $e) {
+            // Log kesalahan dengan pesan spesifik
+            Log::error('Error fetching QRIS transactions: ' . $e->getMessage());
+
+            // Kembalikan array kosong dalam format objek JSON
+            return (object) ['data' => []];
+        }
+    }
+
+
+
     public function getTransactionDetail($ownerUid)
     {
         $documentReference = $this->firestore->collection("referencePayment")

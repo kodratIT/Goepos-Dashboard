@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Backend\Businesses\Businesses;
+use App\Livewire\Backend\ListTransactions\Qris;
 use App\Livewire\Backend\Widhdrawal\Widhdrawal;
 use App\Livewire\Backend\Businesses\BusinessesDetail;
 use App\Livewire\Backend\Transaction\TransactionQris;
@@ -27,5 +28,9 @@ Route::middleware([
     Route::get('/businesses/{id}/transaction/qris', TransactionQris::class)->name('transaction.qris');
     Route::get('/businesses/{id}/transaction/qris/widhdrawal', Widhdrawal::class)->name('widhdrawal.qris');
     Route::get('/businesses/{id}/transaction/qris/widhdrawal/verify', Widhdrawal::class)->name('widhdrawal.qris.verify');
+
+    // TRANSACTION
+    Route::get('/transactions', Qris::class)->name('transactions');
+
 });
 

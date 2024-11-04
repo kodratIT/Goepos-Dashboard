@@ -25,6 +25,10 @@ class TransactionModel extends Model
     {
         return $this->firestore->getTransactionQris($ownerUid);
     }
+    public function getAllTransactionQris($limit)
+    {
+        return $this->firestore->getAllTransactionQris($limit);
+    }
 
     public function getBussinesDetailByOwnerUid($ownerUid)
     {

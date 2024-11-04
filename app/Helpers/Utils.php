@@ -64,3 +64,16 @@ function convertTimestampToDate($timestamp) {
     return $dateTime->format('Y-m-d H:i');
 }
 
+function formatTanggal($dateString = '-')
+{
+    // Pastikan input berupa format yang valid, lalu konversi menggunakan Carbon
+    try {
+        $date = \Carbon\Carbon::parse($dateString); // Parsing tanggal
+        return $date->format('Y-m-d H:i'); // Format menjadi '2024-10-30 09:19'
+    } catch (\Exception $e) {
+        // Jika parsing gagal, kembalikan nilai default '-'
+        return '-';
+    }
+}
+
+
