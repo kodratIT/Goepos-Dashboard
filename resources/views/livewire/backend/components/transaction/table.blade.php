@@ -112,7 +112,7 @@
 
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center text-gray-500">Tidak Ada Transaksi</td>
+                            <td colspan="10" class="text-center text-gray-500">Tidak Ada Transaksi</td>
                         </tr>
                     @endforelse
                 </tbody>
