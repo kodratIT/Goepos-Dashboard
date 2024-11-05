@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Backend\Businesses\Businesses;
 use App\Livewire\Backend\ListTransactions\Qris;
 use App\Livewire\Backend\Widhdrawal\Widhdrawal;
+use App\Livewire\Backend\Notifications\Notification;
 use App\Livewire\Backend\Businesses\BusinessesDetail;
+use App\Livewire\Backend\Notifications\Notifications;
 use App\Livewire\Backend\Transaction\TransactionQris;
+use App\Livewire\Backend\Notifications\AddNotification;
+use App\Livewire\Backend\Notifications\EditNotification;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +35,11 @@ Route::middleware([
 
     // TRANSACTION
     Route::get('/transactions', Qris::class)->name('transactions');
+
+    // Notification
+    Route::get('/notifications', Notification::class)->name('notifications');
+    Route::get('/notifications-add', AddNotification::class)->name('notifications-add');
+    Route::get('/notifications-edit', EditNotification::class)->name('notifications-edit');
 
 });
 

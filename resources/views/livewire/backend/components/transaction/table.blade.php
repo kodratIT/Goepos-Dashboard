@@ -71,29 +71,28 @@
     <div class="md:col-span-2">
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <thead class="text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th class="px-6 py-3">No</th>
-                        <th class="px-6 py-3">ID Trx</th>
-                        <th class="px-6 py-3">OwnerUid</th>
-                        <th class="px-6 py-3">Email</th>
-                        <th class="px-6 py-3">Name</th>
-                        <th class="px-6 py-3">Groos Amount</th>
-                        <th class="px-6 py-3">Fee Amount</th>
-                        <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">CreatedAt</th>
-                        <th class="px-6 py-3">Description</th>
-                        <th  class="px-6 py-3">Action</th>
+                        <th class="px-6 py-3 whitespace-nowrap">No</th>
+                        <th class="px-6 py-3 whitespace-nowrap">CreatedAt</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Name</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Email</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Groos Amount</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Fee Amount</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Status</th>
+                        <th class="px-6 py-3 whitespace-nowrap">Description</th>
+                        <th class="px-6 py-3 whitespace-nowrap">ID Trx</th>
+                        <th class="px-6 py-3 whitespace-nowrap">OwnerUid</th>
+                        <th  class="px-6 py-3 whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($transactions->data as $transaction)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                         <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerUID ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerEmail ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ formatTanggal($transaction->createdAt ?? '-') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->userName ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerEmail ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap @if (in_array($transaction->status ?? '', ['paid', 'completed'])) text-green-600 font-bold @endif">
                             + Rp.{{ number_format($transaction->totalGroosAmount ?? 0) }}
                         </td>
@@ -103,8 +102,9 @@
                         <td class="px-6 py-4 whitespace-nowrap @if (in_array($transaction->status ?? '', ['paid', 'completed'])) text-green-600 font-bold @endif">
                             {{ in_array($transaction->status ?? '', ['paid', 'completed']) ? 'Completed' : ucfirst($transaction->status ?? '-') }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ formatTanggal($transaction->createdAt ?? '-') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->description ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->ownerUID ?? '-' }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-right">
                             <a  href="{{ route('businesses.detail', ['id' => $transaction->ownerUID]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail Businesess</a>
                         </td>
