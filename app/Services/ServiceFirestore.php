@@ -830,4 +830,61 @@ class ServiceFirestore
     {
         return uniqid('owner_', true);
     }
+
+    public function getAllNotifications($limit) {
+        $collection = $this->firestore->collection('notifications');
+        $query = $collection->limit($limit);
+        $documents = $query->documents();
+
+        $notifications = [];
+
+        foreach ($documents as $document) {
+            if ($document->exists()) {
+                $notifications[] = $this->mapNotificationData($document);
+            }
+        }
+
+        return json_encode($notifications);
+    }
+
+    private function mapNotificationData($document) {
+        $data = $document->data();
+
+        // Memetakan data message jika ada
+        $message = isset($data['message']) ? array_map(function($msg) {
+            return [
+                'lang' => $msg['lang'] ?? NULL,
+                'text' => $msg['text'] ?? NULL,
+                'actionText' => $msg['actionText'] ?? NULL,
+                'action' => $msg['action'] ?? NULL,
+                'actionTextStyle' => $msg['actionTextStyle'] ?? NULL,
+                'actionTextColor' => $msg['actionTextColor'] ?? NULL
+            ];
+        }, $data['message']) : NULL;
+
+        // Memetakan data title jika ada
+        $title = isset($data['title']) ? array_map(function($ttl) {
+            return [
+                'lang' => $ttl['lang'] ?? NULL,
+                'text' => $ttl['text'] ?? NULL
+            ];
+        }, $data['title']) : NULL;
+
+        return [
+            'id' => $document->id(),
+            'background' => $data['background'] ?? NULL,
+            'createdAt' => formatTanggal($data['createdAt']) ?? NULL,
+            'icon' => $data['icon'] ?? NULL,
+            'iconColor' => $data['iconColor'] ?? NULL,
+            'backgroundIconColor' => $data['backgroundIconColor'] ?? NULL,
+            'message' => $message,
+            'messageColor' => $data['messageColor'] ?? NULL,
+            'title' => $title,
+            'titleColor' => $data['titleColor'] ?? NULL,
+            'showUntil' => $data['showUntil'] ?? NULL,
+            'type' => $data['type'] ?? NULL,
+            'action' => $data['action'] ?? NULL,
+            'actionText' => $data['actionText'] ?? NULL
+        ];
+    }
 }

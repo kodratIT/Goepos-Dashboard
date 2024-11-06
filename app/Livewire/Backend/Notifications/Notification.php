@@ -3,82 +3,27 @@
 namespace App\Livewire\Backend\Notifications;
 
 use Livewire\Component;
+use App\Models\NotificationsModel;
 
 class Notification extends Component
 {
-    public $notifications; // Data notifikasi
-    public $perPageOptions = [5, 10, 15, 20, 50, 100, 250, 500, 1000];
+    public $notifications = []; // Menyimpan data notifikasi yang dimuat
+    public $perPageOptions = [ 5, 10, 15, 20, 50, 100, 250, 500, 1000];
     public $perPage = 5;
     public $hasMore = true;
     public $isLoading = false;
+    public $isFilter = false;
+
+    public $countData =0;
+
+    protected function firestore()
+    {
+        return new NotificationsModel();
+    }
 
     public function mount()
     {
-        // Data dummy untuk notifikasi
-        $this->notifications = collect([
-            [
-                'id' => 'notif_1',
-                'background' => '#ffcccc',
-                'createdAt' => now(),
-                'icon' => 'https://example.com/icon1.png',
-                'iconColor' => '#ff0000',
-                'backgroundIconColor' => '#fff5f5',
-                'message' => [
-                    ['lang' => 'in', 'text' => 'Selamat datang, klik atur produk untuk mengatur daftar produk Anda', 'actionText' => 'atur produk', 'action' => 'manage_product', 'actionTextStyle' => 'bold', 'actionTextColor' => '#ff0000'],
-                    ['lang' => 'en', 'text' => 'Welcome, click to manage your product list', 'actionText' => 'manage product', 'action' => 'manage_product', 'actionTextStyle' => 'italic', 'actionTextColor' => '#ff0000'],
-                ],
-                'messageColor' => '#333333',
-                'title' => [
-                    ['lang' => 'in', 'text' => 'Selamat Datang Boss'],
-                    ['lang' => 'en', 'text' => 'Welcome Boss'],
-                ],
-                'titleColor' => '#ff0000',
-                'showUntil' => now()->addDays(3),
-                'type' => 'all',
-                'action' => 'https://goepos.id',
-                'actionText' => 'Visit GoEpos'
-            ],
-            [
-                'id' => 'notif_2',
-                'background' => '#cceeff',
-                'createdAt' => now()->subDays(1),
-                'icon' => 'info',
-                'iconColor' => '#0044cc',
-                'backgroundIconColor' => '#e0f7ff',
-                'message' => [
-                    ['lang' => 'in', 'text' => 'Pesanan Anda sedang diproses', 'actionText' => 'lihat pesanan', 'action' => 'order_status', 'actionTextStyle' => 'italic', 'actionTextColor' => '#0044cc'],
-                ],
-                'messageColor' => '#333333',
-                'title' => [
-                    ['lang' => 'in', 'text' => 'Status Pesanan'],
-                ],
-                'titleColor' => '#0044cc',
-                'showUntil' => now()->addDays(1),
-                'type' => 'specific',
-                'action' => 'https://tracking.example.com',
-                'actionText' => 'Track Order'
-            ],
-            [
-                'id' => 'notif_3',
-                'background' => '#e0e0e0',
-                'createdAt' => now()->subHours(6),
-                'icon' => 'warning',
-                'iconColor' => '#ffaa00',
-                'backgroundIconColor' => '#fff3e0',
-                'message' => [
-                    ['lang' => 'in', 'text' => 'Pembayaran Anda telah diterima', 'actionText' => 'lihat detail', 'action' => 'payment_detail', 'actionTextStyle' => 'bold', 'actionTextColor' => '#ffaa00'],
-                ],
-                'messageColor' => '#333333',
-                'title' => [
-                    ['lang' => 'in', 'text' => 'Pembayaran Berhasil'],
-                ],
-                'titleColor' => '#ffaa00',
-                'showUntil' => null,
-                'type' => 'all',
-                'action' => 'https://example.com/payment-detail',
-                'actionText' => 'View Details'
-            ]
-        ])->take($this->perPage);
+        $this->loadMore(); // Memuat data awal
     }
 
     public function render()
@@ -87,4 +32,47 @@ class Notification extends Component
             'notifications' => $this->notifications,
         ])->layout('layouts.app');
     }
+
+
+    public function loadData()
+    {
+        // Mengambil data dari Firestore dengan limit sesuai `perPage`
+        $data = $this->firestore()->getAllNotifications($this->perPage);
+        $this->notifications = json_decode($data, true);
+    }
+
+    public function updateDataPerPage()
+    {
+        // Reset data dan muat ulang berdasarkan `perPage`
+        $this->isFilter = true;
+        $this->notifications = []; // Reset daftar notifikasi
+        $this->loadData();
+        $this->isFilter = false;
+    }
+
+
+    public function loadMore()
+    {
+        $this->countData += $this->perPage;
+
+        $this->isLoading = true;
+
+        // Ambil data notifikasi dengan limit sesuai `perPage`
+        $data = $this->firestore()->getAllNotifications($this->countData);
+
+        $newNotifications = json_decode($data, true);
+
+        // Filter data baru agar hanya memasukkan notifikasi yang ID-nya belum ada di daftar `notifications`
+        $existingIds = array_column($this->notifications, 'id'); // Ambil semua ID yang sudah ada
+        $uniqueNotifications = array_filter($newNotifications, function($notification) use ($existingIds) {
+            return !in_array($notification['id'], $existingIds);
+        });
+
+        // Tambahkan data baru yang unik ke daftar notifikasi yang sudah ada
+        $this->notifications = array_merge($this->notifications, $uniqueNotifications);
+
+        $this->isLoading = false;
+
+    }
+
 }
