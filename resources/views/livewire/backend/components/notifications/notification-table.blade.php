@@ -50,8 +50,8 @@
                         <!-- Message (short preview) -->
                         <td class="px-4 py-4 text-gray-700">
                             <!-- Menampilkan pesan dengan batas 20 karakter -->
-                            {{ Str::limit($notification['message'][0]['text'] ?? '-', 20) }}
-                            @if (strlen($notification['message'][0]['text'] ?? '') > 20)
+                            {{ Str::limit($notification['message'][0]['text'] ?? '-',20) }}
+                            @if (strlen($notification['message'][0]['text'] ?? '') > 0)
                                 <a href="#" class="text-blue-500 hover:underline"
                                     onclick="showFullMessage({{ json_encode($notification['message']) }})">
                                     Lihat Detail
@@ -133,10 +133,10 @@
             <!-- Tabs untuk Pemilihan Bahasa -->
             <div class="mb-4 border-b border-gray-200">
                 <div class="flex space-x-4" id="languageTabs">
-                    <button onclick="selectLanguage('all')" id="lang-all"
+                    {{-- <button onclick="selectLanguage('all')" id="lang-all"
                         class="py-2 px-4 border-b-2 font-semibold focus:outline-none transition-all duration-200 ease-in-out">
                         Semua Bahasa
-                    </button>
+                    </button> --}}
                     <button onclick="selectLanguage('in')" id="lang-in"
                         class="py-2 px-4 border-b-2 font-semibold focus:outline-none transition-all duration-200 ease-in-out">
                         Indonesia
@@ -170,11 +170,11 @@
 
 <script>
     let selectedMessageData = []; // Array data pesan yang diterima
-    let selectedLanguage = 'all'; // Bahasa default
+    let selectedLanguage = 'in'; // Bahasa default
 
     function showFullMessage(messages) {
         selectedMessageData = messages;
-        selectLanguage('all'); // Menampilkan semua bahasa pertama kali
+        selectLanguage('in'); // Menampilkan semua bahasa pertama kali
         document.getElementById('fullMessageModal').classList.remove('hidden');
     }
 
@@ -195,8 +195,9 @@
 
         // Filter pesan sesuai bahasa yang dipilih
         let filteredMessages;
-        if (lang === 'all') {
-            filteredMessages = selectedMessageData; // Tampilkan semua data
+        if (lang === 'in') {
+            filteredMessages = selectedMessageData.filter(msg => msg.lang ===
+            lang); // Tampilkan semua data
         } else {
             filteredMessages = selectedMessageData.filter(msg => msg.lang ===
             lang); // Hanya data sesuai bahasa yang dipilih

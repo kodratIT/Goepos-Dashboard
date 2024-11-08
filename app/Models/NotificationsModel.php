@@ -23,4 +23,8 @@ class NotificationsModel extends Model
     public function getAllNotifications($limit){
        return $this->firestore->getAllNotifications($limit);
     }
+
+    public function createNotifications($data,$spesificTarget,$ownerUids){
+        return $this->firestore->createNotifications($data,$spesificTarget,$ownerUids);
+    }
 }

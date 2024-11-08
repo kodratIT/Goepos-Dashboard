@@ -887,4 +887,80 @@ class ServiceFirestore
             'actionText' => $data['actionText'] ?? NULL
         ];
     }
+
+    public function createNotifications($data, $specificTarget, $ownerUids)
+    {
+        // Tambahkan variabel kontrol untuk memastikan dokumen hanya dibuat sekali
+        static $isDocumentCreated = false;
+
+        // Jika dokumen sudah dibuat sebelumnya, batalkan operasi
+        if ($isDocumentCreated) {
+            return false;
+        }
+
+        $businesses = [];
+        if ($specificTarget == "subscription") {
+            $documents = $this->firestore->collection("businesses")
+                        ->where('subscriptionId', '!=', 'goepos_free')
+                        ->documents();
+
+            foreach ($documents as $document) {
+                if ($document->exists()) {
+                    $businesses[] = $document->data();
+                }
+            }
+        }
+
+        try {
+            // Tambahkan dokumen baru ke koleksi utama
+            $collection = $this->firestore->collection('notifications');
+            $document = $collection->add($data);
+
+            // Set variabel kontrol menjadi true untuk menghindari duplikasi
+            $isDocumentCreated = true;
+
+            // Update dokumen dengan ID yang baru saja dibuat
+            $documentId = $document->id();
+            $collection->document($documentId)->update([
+                ['path' => 'id', 'value' => $documentId]
+            ]);
+
+            if ($specificTarget == "subscription") {
+                foreach ($businesses as $business) {
+                    $document = $this->firestore->collection('businesses')
+                                    ->document($business['ownerUid'])
+                                    ->collection('notifications')
+                                    ->document($documentId);
+
+                    $document->set([
+                        'id' => $documentId,
+                        'show' => true,
+                        'createdAt' => Carbon::now(),
+                        'type' => 'specific',
+                    ]);
+                }
+            } elseif ($specificTarget == "user_only") {
+                foreach ($ownerUids as $ownerUid) {
+                    $document = $this->firestore->collection('businesses')
+                                    ->document($ownerUid)
+                                    ->collection('notifications')
+                                    ->document($documentId);
+
+                    $document->set([
+                        'id' => $documentId,
+                        'show' => true,
+                        'createdAt' => Carbon::now(),
+                        'type' => 'specific',
+                    ]);
+                }
+            }
+
+            return true;
+        } catch (GoogleException $e) {
+            Log::error('Failed to add notification to Firestore: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }

@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
         "mews/captcha": "^3.3",
+        "stichoza/google-translate-php": "^5.2",
         "yoeunes/toastr": "^3.0"
     },
     "require-dev": {
