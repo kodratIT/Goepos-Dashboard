@@ -43,31 +43,39 @@
                 <!-- Icon Color Selection -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <i class="fas fa-brush text-gray-600"></i> Icon Color
+                        <i class="fas fa-brush text-gray-600"></i>Background Icon Color
                     </label>
                     <div class="flex items-center gap-2 mt-1">
-                        <input type="color" wire:model="newNotification.iconColor"
+                        <input type="color" wire:model="newNotification.backgroundIconColor"
                             class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-200"
                             aria-label="Choose icon color">
-                        <input type="text" wire:model="newNotification.iconColor" placeholder="#aabbcc"
+                        <input type="text" wire:model="newNotification.backgroundIconColor" placeholder="#aabbcc"
                             class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200"
                             aria-label="Enter hex color code for icon">
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Choose or enter a hex code (e.g., #ff0000) for the
                         notification icon color.</p>
                 </div>
-            </div>
 
-            <!-- Icon URL or Name Selection -->
-            <div class="mt-8">
-                <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <i class="fas fa-image text-gray-600"></i> Icon (URL or Name)
-                </label>
-                <input type="text" wire:model="newNotification.icon" placeholder="URL or icon name"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                    aria-label="Enter icon URL or name">
-                <p class="text-xs text-gray-500 mt-1">Enter a URL or name of a predefined icon to display in the
-                    notification.</p>
+                <!-- Icon Color Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Icon Color</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="color" wire:model="newNotification.iconColor"
+                            class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300">
+                        <input type="text" wire:model="newNotification.iconColor" placeholder="#aabbcc"
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-200">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Enter a hex code (e.g., #ff0000) for the icon color.</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Icon (URL or Name)</label>
+                    <input type="text" wire:model="newNotification.icon" placeholder="URL or icon name"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm">
+                    <p class="text-xs text-gray-500 mt-1">Enter a URL or name of a predefined icon to display in the
+                        notification.</p>
+                </div>
             </div>
         </div>
 

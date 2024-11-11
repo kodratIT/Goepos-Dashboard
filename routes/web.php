@@ -39,7 +39,7 @@ Route::middleware([
     // Notification
     Route::get('/notifications', Notification::class)->name('notifications');
     Route::get('/notifications-add', AddNotification::class)->name('notifications-add');
-    Route::get('/notifications-edit', EditNotification::class)->name('notifications-edit');
+    Route::get('/notifications-edit/{id}', EditNotification::class)->name('notifications-edit');
 
 });
 

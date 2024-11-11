@@ -833,7 +833,9 @@ class ServiceFirestore
 
     public function getAllNotifications($limit) {
         $collection = $this->firestore->collection('notifications');
-        $query = $collection->limit($limit);
+
+        // Urutkan berdasarkan createdAt dalam urutan descending
+        $query = $collection->orderBy('createdAt', 'DESC')->limit($limit);
         $documents = $query->documents();
 
         $notifications = [];
@@ -846,6 +848,7 @@ class ServiceFirestore
 
         return json_encode($notifications);
     }
+
 
     private function mapNotificationData($document) {
         $data = $document->data();
@@ -962,5 +965,101 @@ class ServiceFirestore
         }
     }
 
+    public function findNotificationById($id)
+    {
+        // Mengakses koleksi 'notifications' dan mengambil dokumen berdasarkan ID
+        $docRef = $this->firestore->collection('notifications')->document($id);
+        $snapshot = $docRef->snapshot();
+
+        // Cek apakah dokumen ditemukan
+        if ($snapshot->exists()) {
+            return $snapshot->data(); // Mengembalikan data sebagai array
+        } else {
+            return null; // Kembalikan null jika dokumen tidak ditemukan
+        }
+    }
+
+    public function updateNotification($data, $specificTarget, $ownerUids = []) {
+
+        // Periksa apakah dokumen dengan ID yang diberikan ada
+        $documentId = $data['id'];
+        $collection = $this->firestore->collection('notifications');
+        $document = $collection->document($documentId);
+
+        if (!$document->snapshot()->exists()) {
+            Log::error("Dokumen dengan ID $documentId tidak ditemukan.");
+            return false;
+        }
+
+        try {
+            // Perbarui data di koleksi utama 'notifications'
+            $document->update([
+                ['path' => 'backgroundIconColor', 'value' => $data['backgroundIconColor'] ?? ''],
+                ['path' => 'iconColor', 'value' => $data['iconColor'] ?? ''],
+                ['path' => 'background', 'value' => $data['background'] ?? ''],
+                ['path' => 'icon', 'value' => $data['icon'] ?? ''],
+                ['path' => 'message', 'value' => $data['message'] ?? []],
+                ['path' => 'messageColor', 'value' => $data['messageColor'] ?? ''],
+                ['path' => 'title', 'value' => $data['title'] ?? []],
+                ['path' => 'titleColor', 'value' => $data['titleColor'] ?? ''],
+                ['path' => 'showUntil', 'value' => $data['showUntil'] ?? null],
+                ['path' => 'type', 'value' => $data['type']],
+                ['path' => 'updatedAt', 'value' => Carbon::now()]
+            ]);
+
+            if ($specificTarget == "subscription") {
+                // Ambil dokumen bisnis dengan subscription aktif
+                $documents = $this->firestore->collection("businesses")
+                            ->where('subscriptionId', '!=', 'goepos_free')
+                            ->documents();
+
+                $businesses = [];
+                foreach ($documents as $businessDoc) {
+                    if ($businessDoc->exists()) {
+                        $businesses[] = $businessDoc->data();
+                    }
+                }
+
+                // Perbarui notifikasi di subkoleksi businesses/{ownerUid}/notifications
+                foreach ($businesses as $business) {
+                    try {
+                        $this->firestore->collection('businesses')
+                            ->document($business['ownerUid'])
+                            ->collection('notifications')
+                            ->document($documentId)
+                            ->set([
+                                'show' => true,
+                                'updatedAt' => Carbon::now(),
+                                'type' => 'specific'
+                            ], ['merge' => true]);
+                    } catch (GoogleException $e) {
+                        Log::error("Failed to update notification for business {$business['ownerUid']}: " . $e->getMessage());
+                    }
+                }
+            } elseif ($specificTarget == "user_only") {
+                // Perbarui notifikasi di subkoleksi untuk pengguna tertentu
+                foreach ($ownerUids as $ownerUid) {
+                    try {
+                        $this->firestore->collection('businesses')
+                            ->document($ownerUid)
+                            ->collection('notifications')
+                            ->document($documentId)
+                            ->set([
+                                'show' => true,
+                                'updatedAt' => Carbon::now(),
+                                'type' => 'specific'
+                            ], ['merge' => true]);
+                    } catch (GoogleException $e) {
+                        Log::error("Failed to update notification for user {$ownerUid}: " . $e->getMessage());
+                    }
+                }
+            }
+
+            return true;
+        } catch (GoogleException $e) {
+            Log::error('Failed to update notification in Firestore: ' . $e->getMessage());
+            return false;
+        }
+    }
 
 }

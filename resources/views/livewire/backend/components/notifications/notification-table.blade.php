@@ -7,12 +7,14 @@
                     <th class="px-4 py-3">NO</th>
                     <th class="px-4 py-3">ID</th>
                     <th class="px-4 py-3">Background</th>
-                    <th class="px-4 py-3">Icon</th>
+                    <th class="px-4 py-3">Background Icon Color</th>
                     <th class="px-4 py-3">IconColor</th>
+                    <th class="px-4 py-3">Icon</th>
                     <th class="px-4 py-3">Message</th>
                     <th class="px-4 py-3">Title</th>
                     <th class="px-4 py-3">Show Until</th>
                     <th class="px-4 py-3">Type</th>
+                    <th class="px-4 py-3">CreateaAt</th>
                     <th class="px-4 py-3">Action</th>
                 </tr>
             </thead>
@@ -32,6 +34,19 @@
                                         border: {{ $notification['background'] == '#ffffff' ? '1px solid #d1d5db' : 'none' }};">
                             </div>
                         </td>
+                        <!-- Background color preview -->
+                        <td class="px-4 py-4">
+                            <div class="w-8 h-8 rounded-full"
+                                style="background-color: {{ $notification['backgroundIconColor'] ?? '#ffffff' }};
+                                        border: {{ $notification['backgroundIconColor'] == '#ffffff' ? '1px solid #d1d5db' : 'none' }};">
+                            </div>
+                        </td>
+
+
+                        <td class="px-6 py-4" style="color: {{ $notification['iconColor'] ?? '#000' }};">
+                            <div class="w-6 h-6 rounded-full"
+                                style="background-color: {{ $notification['iconColor'] ?? '#000' }};"></div>
+                        </td>
 
                         <!-- Icon -->
                         <td class="px-4 py-4">
@@ -42,13 +57,8 @@
                             @endif
                         </td>
 
-                        <td class="px-6 py-4" style="color: {{ $notification['iconColor'] ?? '#000' }};">
-                            <div class="w-6 h-6 rounded-full"
-                                style="background-color: {{ $notification['iconColor'] ?? '#000' }};"></div>
-                        </td>
-
                         <!-- Message (short preview) -->
-                        <td class="px-4 py-4 text-gray-700">
+                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">
                             <!-- Menampilkan pesan dengan batas 20 karakter -->
                             {{ Str::limit($notification['message'][0]['text'] ?? '-',20) }}
                             @if (strlen($notification['message'][0]['text'] ?? '') > 0)
@@ -88,17 +98,38 @@
                             </span>
                         </td>
 
-                        <td class="px-6 py-4">
-                            <a href="{{ route('notifications-edit', ['id' => $notification['id'] ?? '']) }}"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md shadow-sm transition ease-in-out duration-150">
+
+                        <td class="px-4 py-4">
+                            <span
+                                class="px-4 py-4 text-gray-900 whitespace-nowrap">
+                                {{ $notification['createdAt'] ?? '-' }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 flex space-x-2">
+                            <!-- Tombol Edit -->
+                            <a href="{{ route('notifications-edit', ['id' => $notification['id'] ?? '']) }}" wire:navigate.hover
+                               class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md shadow-sm transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                     stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.232 5.232a3 3 0 114.243 4.243L8.243 20.707a1 1 0 01-.293.207l-4 2a1 1 0 01-1.36-1.36l2-4a1 1 0 01.207-.293l11.242-11.243z" />
+                                          d="M15.232 5.232a3 3 0 114.243 4.243L8.243 20.707a1 1 0 01-.293.207l-4 2a1 1 0 01-1.36-1.36l2-4a1 1 0 01.207-.293l11.242-11.243z" />
                                 </svg>
                                 Edit
                             </a>
+
+                            <!-- Tombol Delete -->
+                            <button onclick="confirmDelete('{{ $notification['id'] ?? '' }}')"
+                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md shadow-sm transition ease-in-out duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Delete
+                            </button>
                         </td>
+
                     </tr>
                 @empty
                     <tr>
@@ -252,7 +283,13 @@
                             </svg>
                             <label class="block text-sm font-medium text-gray-700">Action Text Color:</label>
                         </div>
-                        <p class="text-gray-700 ml-7">${msg.actionTextColor || '-'}</p>
+                        <p class="text-gray-700 ml-7 p-5 text-white border-2"
+                        style="background-color: ${msg.actionTextColor};
+                                border-color: ${msg.actionTextColor || '#d1d5db'};
+                                border-radius: 4px;">
+                        ${msg.actionTextColor || '-'}
+                        </p>
+
                 `;
                 messageContent.insertAdjacentHTML('beforeend', messageHtml);
             });
@@ -261,5 +298,29 @@
 
     function closeModal() {
         document.getElementById('fullMessageModal').classList.add('hidden');
+    }
+</script>
+
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('deleteNotification', id); // Memanggil metode Livewire untuk menghapus data
+                Swal.fire(
+                    'Terhapus!',
+                    'Data berhasil dihapus.',
+                    'success'
+                )
+            }
+        })
     }
 </script>

@@ -13,6 +13,7 @@ class AddNotification extends Component
         'id' => '',
         'iconColor' => '',
         'background' => '',
+        'backgroundIconColor' => '',
         'icon' => '',
         'message' => [
             'in' => ['text' => ''],
@@ -130,7 +131,8 @@ class AddNotification extends Component
         // Susun data hasil akhir
         $data = [
             'background' => $this->newNotification['background'],
-            'BackgroudIconColor' => $this->newNotification['iconColor'],
+            'backgroundIconColor' => $this->newNotification['backgroundIconColor'],
+            'iconColor' => $this->newNotification['iconColor'],
             'icon' => $this->newNotification['icon'],
             'message' => $formattedMessages,
             'messageColor' => $this->newNotification['messageColor'],
