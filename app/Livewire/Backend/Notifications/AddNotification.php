@@ -64,6 +64,21 @@ class AddNotification extends Component
     public $isFormComplete = false;
     public $notifikasiDikirim = false;
 
+    protected $listeners = ['showPreview'];
+    public function updated($propertyName)
+    {
+        logger()->info('newNotification updated:', $this->newNotification);
+
+        $this->newNotification['actionText'] = $this->actionText['in'];
+        
+        $this->dispatch('showPreview', $this->newNotification);
+    }
+
+    public function generatePreview()
+{
+    $this->dispatch('show-preview', $this->newNotification);
+}
+
     protected function firestore()
     {
         return new NotificationsModel();
@@ -223,6 +238,12 @@ class AddNotification extends Component
 
         return $formattedTitles;
     }
+
+    public function isPreviewOpen ()
+    {
+        $this->emit('showPreview', $this->newNotification);
+    }
+
 
 
     public function render()

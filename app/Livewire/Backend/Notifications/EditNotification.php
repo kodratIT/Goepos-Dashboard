@@ -38,6 +38,7 @@ class EditNotification extends Component
         'actionTextStyle' => null,
         'actionTextColor' => null,
         'showUntil' => null,
+        'liveMessage' => null,
     ];
 
     public $message = [
@@ -83,10 +84,34 @@ class EditNotification extends Component
         return new NotificationsModel();
     }
 
+
+    protected $listeners = ['showPreview'];
+    public function updated($propertyName)
+    {
+        logger()->info('newNotification updated:', $this->newNotification);
+
+        $this->newNotification['actionText'] = $this->actionText['in'];
+
+        $this->newNotification['liveMesaage'] = $this->message['in'];
+
+
+        $this->dispatch('showPreview', $this->newNotification);
+    }
+
+    public function generatePreview()
+    {
+        $this->newNotification['liveMesaage'] = $this->message['in'];
+
+        $this->dispatch('show-preview', $this->newNotification);
+    }
     public function mount($id)
     {
         $this->notificationId = $id;
         $this->loadNotification();
+
+
+    // Kirim data ke frontend ketika halaman dimuat
+        // $this->generatePreview();
     }
 
     public function updatedType($value)
@@ -150,10 +175,12 @@ class EditNotification extends Component
             $this->title[$message['lang']] = $message['text'];
         }
 
+
     } else {
         session()->flash('error', 'Notifikasi tidak ditemukan.');
         return redirect()->route('notifications');
     }
+
 }
 
 
@@ -185,6 +212,8 @@ class EditNotification extends Component
 
     public function updateNotification()
     {
+    $textIn = $this->message['in'];
+
         // Format pesan notifikasi
         $formattedMessages = $this->formatMessages($this->message);
         $formattedTitles = $this->formatTitles($this->title);
