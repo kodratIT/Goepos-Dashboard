@@ -17,15 +17,13 @@
     setInterval(() => {
         if (isLivePreviewEnabled) {
             $refs.generateButton.click();
-            {{-- console.log(newNotification); --}}
         }
-        {{-- console.log(newNotification); --}}
     }, 1000);
 
 window.addEventListener('scroll', () => {
     topPosition = window.scrollY > 0 ? '-50px' : '70px'; // Sesuaikan jarak saat di-scroll
 
-});" x-effect="">
+});">
     <div class="max-w-4xl mx-auto mt-10 py-10 px-6 bg-gradient-to-br from-white to-gray-100 shadow-lg rounded-xl"
         x-bind:style="`
                         background-color: ${newNotification?.background || '#555555'};
