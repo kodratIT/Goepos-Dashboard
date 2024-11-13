@@ -35,10 +35,12 @@ class EditNotification extends Component
         'actionText' => null,
         'actionURL' => null,
         'action' => null,
+        'actionText' => null,
         'actionTextStyle' => null,
         'actionTextColor' => null,
         'showUntil' => null,
         'liveMessage' => null,
+        'liveTitle' => null,
     ];
 
     public $message = [
@@ -94,13 +96,11 @@ class EditNotification extends Component
 
         $this->newNotification['liveMesaage'] = $this->message['in'];
 
-
         $this->dispatch('showPreview', $this->newNotification);
     }
 
     public function generatePreview()
     {
-        $this->newNotification['liveMesaage'] = $this->message['in'];
 
         $this->dispatch('show-preview', $this->newNotification);
     }
@@ -142,7 +142,38 @@ class EditNotification extends Component
     if ($notificationData) {
 
         $loop = false;
+        $fileredMessage ='';
+        $fileredTitle ='';
+        $action='';
+        $actionText='';
+        $actionTextColor='';
+        $actionTextStyle='';
+
         foreach ($notificationData['message'] as $lang => $message) {
+
+            // dd($message);
+            if($message['lang'] == 'in'){
+                $fileredMessage = $message['text']?? '';
+                $action =  $message['action'] ?? '';
+                $actionText =  $message['actionText'] ?? '';
+                $actionTextColor= $message['actionTextColor']?? '';
+                $actionTextStyle= $message['actionTextStyle']?? '';
+
+            }
+
+
+            foreach ($notificationData['message'] as $lang => $message) {
+                $this->actionText[$message['lang']] = $message['actionText'] ?? '';
+                $this->message[$message['lang']] = $message['text'];
+            }
+
+            foreach ($notificationData['title'] as $lang => $message) {
+                $this->title[$message['lang']] = $message['text'];
+
+                if($message['lang'] == 'in'){
+                    $fileredTitle = $message['text'];
+                }
+            }
 
             if(!$loop){
                 $this->newNotification = [
@@ -156,25 +187,19 @@ class EditNotification extends Component
                     'title' => $notificationData['title'],
                     'titleColor' => $notificationData['titleColor'] ?? '',
                     'showUntil' => isset($notificationData['showUntil']) ? Carbon::parse($notificationData['showUntil'])->format('Y-m-d') : null,
-                    'action' => $message['action'] ?? null,
-                    'actionTextStyle' => $message['actionTextStyle'] ?? null,
-                    'actionTextColor' => $message['actionTextColor'] ?? null,
+                    'action' => $action ?? null,
+                    'actionText' => $actionText ?? null,
+                    'actionTextStyle' => $actionTextStyle ?? null,
+                    'actionTextColor' => $actionTextColor ?? null,
+                    'liveMessage' => $fileredMessage,
+                    'liveTitle' => $fileredTitle,
                 ];
 
                 $loop = true;
             }
         }
 
-
-        foreach ($notificationData['message'] as $lang => $message) {
-            $this->actionText[$message['lang']] = $message['actionText'] ?? '';
-            $this->message[$message['lang']] = $message['text'];
-        }
-
-        foreach ($notificationData['title'] as $lang => $message) {
-            $this->title[$message['lang']] = $message['text'];
-        }
-
+        // dd($this->newNotification);
 
     } else {
         session()->flash('error', 'Notifikasi tidak ditemukan.');
@@ -212,7 +237,11 @@ class EditNotification extends Component
 
     public function updateNotification()
     {
-    $textIn = $this->message['in'];
+        // dd($this->newNotification);
+        $this->message['in'] = $this->newNotification['liveMessage'];
+        $this->title['in'] = $this->newNotification['liveTitle'];
+
+        $textIn = $this->message['in'];
 
         // Format pesan notifikasi
         $formattedMessages = $this->formatMessages($this->message);
@@ -257,6 +286,7 @@ class EditNotification extends Component
     private function formatMessages(array $messages): array
     {
         // dd($messages);
+
         $formattedMessages = [];
         foreach ($messages as $lang => $message) {
             $translatedActionText = $this->actionText[$lang] ?? '';

@@ -68,7 +68,7 @@ window.addEventListener('scroll', () => {
                 <div>
                     <h4 id="notification-title" class="text-lg font-bold"
                         x-bind:style="`color: ${newNotification?.titleColor || '#000000'};`">
-                        <span x-text="newNotification?.title?.[0].text || newNotification?.title?.text || 'Judul Notifikasi'"></span>
+                        <span x-text="newNotification?.liveTitle || 'Judul Notifikasi'"></span>
                     </h4>
                     <p id="notification-message" class="text-sm"
                         x-bind:style="`color: ${newNotification?.messageColor || '#000000'};`">
@@ -309,22 +309,22 @@ window.addEventListener('scroll', () => {
                     languages.</p>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700">Title (Indonesian)</label>
-                    <input type="text" wire:model="title.in" placeholder="Enter title in Indonesian"
+                    <input type="text" wire:model="newNotification.liveTitle" placeholder="Enter title in Indonesian"
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm">
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700">Message (Indonesian)</label>
-                    <textarea wire:model="message.in" placeholder="Enter message in Indonesian"
+                    <textarea wire:model="newNotification.liveMessage" placeholder="Enter message in Indonesian"
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"></textarea>
                 </div>
 
-                <!-- Button to Trigger Translation -->
+                {{-- <!-- Button to Trigger Translation -->
                 <div class="flex justify-end mb-6">
                     <button type="button" wire:click="translate"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center transition duration-200">
                         <i class="fas fa-language"></i> Translate
                     </button>
-                </div>
+                </div> --}}
 
                 <!-- Auto-Translated Fields for Other Languages -->
                 @foreach (['en' => 'English', 'es' => 'Spanish', 'hi' => 'Hindi', 'de' => 'German'] as $langCode => $langName)
@@ -382,7 +382,6 @@ window.addEventListener('scroll', () => {
                                 </div>
                             </div>
                         </div>
-
 
             <div class="border-b pb-6 mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
