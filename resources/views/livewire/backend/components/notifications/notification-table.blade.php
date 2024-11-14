@@ -60,7 +60,7 @@
                         <!-- Message (short preview) -->
                         <td class="px-4 py-4 text-gray-700 whitespace-nowrap">
                             <!-- Menampilkan pesan dengan batas 20 karakter -->
-                            {{ Str::limit($notification['message'][0]['text'] ?? '-',20) }}
+                            {{ Str::limit($notification['message'][0]['text'] ?? '-', 20) }}
                             @if (strlen($notification['message'][0]['text'] ?? '') > 0)
                                 <a href="#" class="text-blue-500 hover:underline"
                                     onclick="showFullMessage({{ json_encode($notification['message']) }})">
@@ -73,7 +73,8 @@
                         <!-- Title (short preview) -->
                         <td class="px-4 py-4 text-gray-900 whitespace-nowrap">
                             {{ $notification['title'][0]['text'] ?? '-' }}
-                            <span class="text-xs text-gray-500 ">({{ $notification['title'][0]['lang'] ?? '-' }})</span>
+                            <span
+                                class="text-xs text-gray-500 ">({{ $notification['title'][0]['lang'] ?? '-' }})</span>
                         </td>
 
                         <!-- Show Until with color indicator for permanency -->
@@ -100,34 +101,36 @@
 
 
                         <td class="px-4 py-4">
-                            <span
-                                class="px-4 py-4 text-gray-900 whitespace-nowrap">
+                            <span class="px-4 py-4 text-gray-900 whitespace-nowrap">
                                 {{ $notification['createdAt'] ?? '-' }}
                             </span>
                         </td>
 
                         <td class="px-6 py-4 flex space-x-2">
                             <!-- Tombol Edit -->
-                            <a href="{{ route('notifications-edit', ['id' => $notification['id'] ?? '']) }}" wire:navigate.hover
-                               class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md shadow-sm transition ease-in-out duration-150">
+                            <a href="{{ route('notifications-edit', ['id' => $notification['id'] ?? '']) }}"
+                                wire:navigate.hover
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md shadow-sm transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M15.232 5.232a3 3 0 114.243 4.243L8.243 20.707a1 1 0 01-.293.207l-4 2a1 1 0 01-1.36-1.36l2-4a1 1 0 01.207-.293l11.242-11.243z" />
+                                        d="M15.232 5.232a3 3 0 114.243 4.243L8.243 20.707a1 1 0 01-.293.207l-4 2a1 1 0 01-1.36-1.36l2-4a1 1 0 01.207-.293l11.242-11.243z" />
                                 </svg>
                                 Edit
                             </a>
 
                             <!-- Tombol Delete -->
-                            <button onclick="confirmDelete('{{ $notification['id'] ?? '' }}')"
-                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md shadow-sm transition ease-in-out duration-150">
+                            <button wire:click="confirmDelete('{{ $notification['id'] }}')"
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md shadow-sm transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M6 18L18 6M6 6l12 12" />
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                                 Delete
                             </button>
+
+
+
                         </td>
 
                     </tr>
@@ -228,10 +231,10 @@
         let filteredMessages;
         if (lang === 'in') {
             filteredMessages = selectedMessageData.filter(msg => msg.lang ===
-            lang); // Tampilkan semua data
+                lang); // Tampilkan semua data
         } else {
             filteredMessages = selectedMessageData.filter(msg => msg.lang ===
-            lang); // Hanya data sesuai bahasa yang dipilih
+                lang); // Hanya data sesuai bahasa yang dipilih
         }
 
         // Cek apakah ada pesan yang sesuai dengan bahasa yang dipilih
@@ -302,25 +305,58 @@
 </script>
 
 <script>
-    function confirmDelete(id) {
+    document.addEventListener('swal:confirm', (event) => {
+        const {
+            title,
+            text,
+            icon,
+            confirmButtonText,
+            cancelButtonText,
+            method,
+            params
+        } = event.detail[0];
+
         Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
-            icon: 'warning',
+            title: title,
+            text: text,
+            icon: icon,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: cancelButtonText
         }).then((result) => {
             if (result.isConfirmed) {
-                @this.call('deleteNotification', id); // Memanggil metode Livewire untuk menghapus data
-                Swal.fire(
-                    'Terhapus!',
-                    'Data berhasil dihapus.',
-                    'success'
-                )
+                // Panggil metode Livewire sesuai dengan event.detail.method
+                Livewire.find(event.target.closest('[wire\\:id]').getAttribute('wire:id'))
+                    .call(method, params);
             }
-        })
-    }
+        });
+    });
+
+    // document.addEventListener('swal:success', (event) => {
+    //     const {
+    //         title,
+    //         text
+    //     } = event.detail[0];
+    //     Swal.fire({
+    //         title: title,
+    //         text: text,
+    //         icon: 'success',
+    //         confirmButtonColor: '#3085d6',
+    //     });
+    // });
+
+    // document.addEventListener('swal:error', (event) => {
+    //     const {
+    //         title,
+    //         text
+    //     } = event.detail[0];
+    //     Swal.fire({
+    //         title: title,
+    //         text: text,
+    //         icon: 'error',
+    //         confirmButtonColor: '#3085d6',
+    //     });
+    // });
 </script>

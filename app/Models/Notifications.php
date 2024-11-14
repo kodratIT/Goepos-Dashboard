@@ -27,6 +27,11 @@ class Notifications extends Model
     public function getAllNotifications($limit){
        return $this->firestore()->getAllNotifications($limit);
     }
+    public function deleteNotification($id){
 
-    
+        dd("aa");
+       return $this->firestore()->deleteNotification($id);
+    }
+
+
 }

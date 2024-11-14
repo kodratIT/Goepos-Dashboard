@@ -38,4 +38,8 @@ class NotificationsModel extends Model
         return $this->firestore->updateNotification($data,$spesificTarget,$ownerUids);
     }
 
+    public function deleteNotification($id){
+       return $this->firestore->deleteNotification($id);
+    }
+
 }

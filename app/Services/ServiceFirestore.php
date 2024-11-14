@@ -1062,4 +1062,19 @@ class ServiceFirestore
         }
     }
 
+    public function deleteNotification($id)
+    {
+        try {
+            $this->firestore->collection('notifications')->document($id)->delete();
+            return true;
+        } catch (\Exception $e) {
+
+            return false;
+            // Opsional: Log error untuk debugging
+            \Log::error('Error saat menghapus notifikasi:', ['error' => $e->getMessage()]);
+        }
+    }
+
+
+
 }

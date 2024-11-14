@@ -21,6 +21,10 @@ class Notification extends Component
         return new NotificationsModel();
     }
 
+    protected $listeners = [
+        'reloadNotifications' => 'loadData', // Dengarkan event dan panggil metode loadData
+    ];
+
     public function mount()
     {
         $this->loadMore(); // Memuat data awal
@@ -74,8 +78,6 @@ class Notification extends Component
         $this->isLoading = false;
 
     }
-
-    
 
 
 }
