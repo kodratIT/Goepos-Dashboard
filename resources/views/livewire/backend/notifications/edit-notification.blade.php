@@ -2,23 +2,21 @@
     isLivePreviewEnabled: false,
     newNotification: @entangle('newNotification').defer,
     topPosition: '70px',
-}" x-init="
-
-      window.addEventListener('showPreview', event => {
-        if (event.detail) {
-            newNotification = event.detail.newNotification;
-        }
-    });
-
-    // Inisialisasi awal jika event belum ada
-    if (!newNotification || Object.keys(newNotification).length === 0) {
-        newNotification = @js($newNotification);
+}" x-init="window.addEventListener('showPreview', event => {
+    if (event.detail) {
+        newNotification = event.detail.newNotification;
     }
-    setInterval(() => {
-        if (isLivePreviewEnabled) {
-            $refs.generateButton.click();
-        }
-    }, 1000);
+});
+
+// Inisialisasi awal jika event belum ada
+if (!newNotification || Object.keys(newNotification).length === 0) {
+    newNotification = @js($newNotification);
+}
+setInterval(() => {
+    if (isLivePreviewEnabled) {
+        $refs.generateButton.click();
+    }
+}, 1000);
 
 window.addEventListener('scroll', () => {
     topPosition = window.scrollY > 0 ? '-50px' : '70px'; // Sesuaikan jarak saat di-scroll
@@ -26,14 +24,14 @@ window.addEventListener('scroll', () => {
 });">
     <div class="max-w-4xl mx-auto mt-10 py-10 px-6 bg-gradient-to-br from-white to-gray-100 shadow-lg rounded-xl"
         x-bind:style="`
-                        background-color: ${newNotification?.background || '#555555'};
-                        position: ${isLivePreviewEnabled ? 'fixed' : 'static'};
-                        top: ${isLivePreviewEnabled ? topPosition : 'auto'};
-                        left: ${isLivePreviewEnabled ? '50%' : 'auto'};
-                        transform: ${isLivePreviewEnabled ? 'translateX(-50%)' : 'none'};
-                        width: ${isLivePreviewEnabled ? '1000px' : 'auto'};
-                        z-index: ${isLivePreviewEnabled ? '50' : 'auto'};
-                    `">
+                                background-color: ${newNotification?.background || '#555555'};
+                                position: ${isLivePreviewEnabled ? 'fixed' : 'static'};
+                                top: ${isLivePreviewEnabled ? topPosition : 'auto'};
+                                left: ${isLivePreviewEnabled ? '50%' : 'auto'};
+                                transform: ${isLivePreviewEnabled ? 'translateX(-50%)' : 'none'};
+                                width: ${isLivePreviewEnabled ? '1000px' : 'auto'};
+                                z-index: ${isLivePreviewEnabled ? '50' : 'auto'};
+                            `">
         <div class="flex items-center justify-end mb-4">
             <label for="livePreviewToggle" class="mr-2 text-gray-600 font-semibold">Aktifkan Live Preview</label>
             <button
@@ -50,12 +48,12 @@ window.addEventListener('scroll', () => {
         <div id="notification-preview" x-show="isLivePreviewEnabled" x-cloak
             class="mt-10 p-4 rounded-lg shadow-md transition duration-300 ease-in-out"
             x-bind:style="`
-                                     background-color: ${newNotification?.background || '#ffffff'};
-                                     top: ${isLivePreviewEnabled ? topPosition : 'auto'};
-                                     left: ${isLivePreviewEnabled ? '50%' : 'auto'};
-                                     width: ${isLivePreviewEnabled ? '100%' : 'auto'};
-                                     z-index: ${isLivePreviewEnabled ? '50' : 'auto'};
-                                 `">
+                                                 background-color: ${newNotification?.background || '#ffffff'};
+                                                 top: ${isLivePreviewEnabled ? topPosition : 'auto'};
+                                                 left: ${isLivePreviewEnabled ? '50%' : 'auto'};
+                                                 width: ${isLivePreviewEnabled ? '100%' : 'auto'};
+                                                 z-index: ${isLivePreviewEnabled ? '50' : 'auto'};
+                                             `">
             <div class="flex items-center">
                 <div id="notification-icon" class="w-12 h-12 rounded-full flex items-center justify-center mr-4 shadow"
                     x-bind:style="`background-color: ${newNotification?.backgroundIconColor || '#000000'};`">
@@ -76,11 +74,11 @@ window.addEventListener('scroll', () => {
                     </p>
                     <a id="notification-action" href="#" class="underline"
                         x-bind:style="`
-                            color: ${newNotification?.actionTextColor || '#000000'};
-                            font-weight: ${newNotification?.actionTextStyle === 'bold' ? 'bold' : 'normal'};
-                            font-style: ${newNotification?.actionTextStyle === 'italic' ? 'italic' : 'normal'};
-                            text-decoration: ${newNotification?.actionTextStyle === 'underline' ? 'underline' : 'none'};
-                        `">
+                                                    color: ${newNotification?.actionTextColor || '#000000'};
+                                                    font-weight: ${newNotification?.actionTextStyle === 'bold' ? 'bold' : 'normal'};
+                                                    font-style: ${newNotification?.actionTextStyle === 'italic' ? 'italic' : 'normal'};
+                                                    text-decoration: ${newNotification?.actionTextStyle === 'underline' ? 'underline' : 'none'};
+                                                `">
                         <span x-text="newNotification?.actionText || 'Teks Aksi'"></span>
                     </a>
                 </div>
@@ -96,9 +94,9 @@ window.addEventListener('scroll', () => {
     </div>
     <div class="max-w-4xl mx-auto mt-10 py-10 px-6 bg-gradient-to-br from-white to-gray-100 shadow-lg rounded-xl mt-100"
         x-bind:style="`
-                            top: ${isLivePreviewEnabled ? '100px' : 'auto'};
-                            margin-top: ${isLivePreviewEnabled ? '320px' : '20px'};
-                        `">
+                                    top: ${isLivePreviewEnabled ? '100px' : 'auto'};
+                                    margin-top: ${isLivePreviewEnabled ? '320px' : '20px'};
+                                `">
 
 
         <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
@@ -112,6 +110,39 @@ window.addEventListener('scroll', () => {
         <!-- Form -->
         <form wire:submit.prevent="updateNotification">
             <!-- Notification Icon Styling Section -->
+            <div class="border-b pb-6 mb-8">
+
+                <div x-data="notificationForm()" class="max-w-4xl mx-auto">
+                    <h3 class="text-lg font-bold mb-4">Pilih Desain Notifikasi</h3>
+
+                    <!-- Bagian grup warna -->
+                    <template x-for="(groupStyles, groupName) in groupedStyles" :key="groupName">
+                        <div class="mb-6">
+                            <!-- Nama grup warna -->
+                            <h6 class="text-base font-semibold capitalize mb-2" x-text="groupName"></h6>
+                            <div class="flex flex-wrap gap-4">
+                                <!-- List style dalam grup -->
+                                <template x-for="style in groupStyles" :key="style.name">
+                                    <div @click="applyStyle(style)"
+                                        :class="{
+                                            'transform scale-105': selectedStyle === style.name
+                                        }"
+                                        class="cursor-pointer p-4 rounded-lg shadow hover:shadow-md transition-all"
+                                        x-bind:style="`
+                                                                                        background: ${style.background};
+                                                                                        border: ${selectedStyle === style.name ? '3px solid black' : '2px solid transparent'};
+                                                                                    `">
+                                        <i :class="style.icon" class="text-3xl"
+                                            x-bind:style="`color: ${style.iconColor};`"></i>
+                                        <h4 x-text="style.name" class="mt-2 text-sm font-semibold"></h4>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+            </div>
             <div class="border-b pb-6 mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-2">Style Icon Notification</h3>
                 <p class="text-sm text-gray-500 mb-4">Customize the colors and style of your notification’s icon and
@@ -183,7 +214,8 @@ window.addEventListener('scroll', () => {
                         <input type="text" wire:model="actionText.in"
                             placeholder="Enter action text (e.g., Learn More)"
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none">
-                        <p class="text-xs text-gray-500 mt-1">Text that appears on the action button (Optional - in)</p>
+                        <p class="text-xs text-gray-500 mt-1">Text that appears on the action button (Optional - in)
+                        </p>
                     </div>
                     <!-- Action Text -->
                     <div>
@@ -309,7 +341,8 @@ window.addEventListener('scroll', () => {
                     languages.</p>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700">Title (Indonesian)</label>
-                    <input type="text" wire:model="newNotification.liveTitle" placeholder="Enter title in Indonesian"
+                    <input type="text" wire:model="newNotification.liveTitle"
+                        placeholder="Enter title in Indonesian"
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm">
                 </div>
                 <div class="mb-6">
@@ -342,46 +375,46 @@ window.addEventListener('scroll', () => {
                 @endforeach
             </div>
 
-                        <!-- Action Options Section -->
-                        <div class="border-b pb-6 mb-8">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                <i class="fas fa-bolt text-gray-600"></i> Style Message
-                            </h3>
-                            <p class="text-sm text-gray-500 mb-4">Customize the action button with text, URL, style, and color.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <!-- Action Options Section -->
+            <div class="border-b pb-6 mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                    <i class="fas fa-bolt text-gray-600"></i> Style Message
+                </h3>
+                <p class="text-sm text-gray-500 mb-4">Customize the action button with text, URL, style, and color.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
-                                {{-- Message Color --}}
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <i class="fas fa-palette text-gray-600"></i> Message Color
-                                    </label>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <input type="color" wire:model="newNotification.messageColor"
-                                            class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300 focus:ring focus:ring-blue-200">
-                                        <input type="text" wire:model="newNotification.messageColor" placeholder="#aabbcc"
-                                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200">
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1">Choose or enter hex color code for the Message color
-                                        (e.g., #ff0000)</p>
-                                </div>
-
-
-                                {{-- Title Color --}}
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <i class="fas fa-palette text-gray-600"></i> Title Color
-                                    </label>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <input type="color" wire:model="newNotification.titleColor"
-                                            class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300 focus:ring focus:ring-blue-200">
-                                        <input type="text" wire:model="newNotification.titleColor" placeholder="#aabbcc"
-                                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200">
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1">Choose or enter hex color code for the Title color
-                                        (e.g., #ff0000)</p>
-                                </div>
-                            </div>
+                    {{-- Message Color --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                            <i class="fas fa-palette text-gray-600"></i> Message Color
+                        </label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="color" wire:model="newNotification.messageColor"
+                                class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300 focus:ring focus:ring-blue-200">
+                            <input type="text" wire:model="newNotification.messageColor" placeholder="#aabbcc"
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200">
                         </div>
+                        <p class="text-xs text-gray-500 mt-1">Choose or enter hex color code for the Message color
+                            (e.g., #ff0000)</p>
+                    </div>
+
+
+                    {{-- Title Color --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                            <i class="fas fa-palette text-gray-600"></i> Title Color
+                        </label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="color" wire:model="newNotification.titleColor"
+                                class="h-10 w-10 cursor-pointer rounded-lg shadow-sm border border-gray-300 focus:ring focus:ring-blue-200">
+                            <input type="text" wire:model="newNotification.titleColor" placeholder="#aabbcc"
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Choose or enter hex color code for the Title color
+                            (e.g., #ff0000)</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="border-b pb-6 mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
@@ -485,3 +518,85 @@ window.addEventListener('scroll', () => {
             </div>
         </form>
     </div>
+    <script>
+        function notificationForm() {
+            return {
+                styles: @js($styles), // Data styles dari backend
+                newNotification: @entangle('newNotification'),
+                selectedStyle: null, // Style yang dipilih
+                isLivePreviewEnabled: false,
+
+                get groupedStyles() {
+                    const colorGroups = {
+                        blue: ['#d1ecf1', '#cce5ff', '#d1e7f2', '#bbdefb'],
+                        yellow: ['#fff3cd', '#fff9c4', '#fffde7', '#ff9800'],
+                        red: ['#f8d7da', '#ffcdd2', '#ff8a80', '#d50000'],
+                        green: ['#d4edda', '#e8f5e9', '#dff0d8', '#69f0ae'],
+                        purple: ['#e8daef', '#ede7f6', '#9575cd', '#6a1b9a'],
+                        // Tambahkan grup warna lain jika diperlukan
+                    };
+
+                    const grouped = {
+                        blue: [],
+                        yellow: [],
+                        red: [],
+                        green: [],
+                        purple: [],
+                        "Warna Lainnya": [] // Grup default untuk warna yang tidak sesuai
+                    };
+
+                    // Iterasi styles untuk memeriksa grup
+                    this.styles.forEach(style => {
+                        let foundGroup = false;
+
+                        // Cek apakah style termasuk dalam salah satu grup warna
+                        for (const [group, colors] of Object.entries(colorGroups)) {
+                            if (colors.includes(style.background)) {
+                                grouped[group].push(style);
+                                foundGroup = true;
+                                break;
+                            }
+                        }
+
+                        // Jika style tidak sesuai grup, masukkan ke "Warna Lainnya"
+                        if (!foundGroup) {
+                            grouped["Warna Lainnya"].push(style);
+                        }
+                    });
+
+                    return grouped;
+                },
+
+                // Fungsi untuk menerapkan style yang dipilih
+                applyStyle(style) {
+                    this.newNotification = {
+                        icon: style.icon || '', // Default jika data tidak ada
+                        background: style.background || '#ffffff',
+                        backgroundIconColor: style.backgroundIconColor || '#ffffff',
+                        iconColor: style.iconColor || '#000000',
+                        title: style.title || {
+                            in: {
+                                text: ''
+                            }
+                        },
+                        message: style.message || {
+                            in: {
+                                text: ''
+                            }
+                        },
+                        messageColor: style.messageColor || '#000000',
+                        titleColor: style.titleColor || '#000000',
+                        actionText: style.actionText || '',
+                        actionURL: style.actionURL || '',
+                        actionTextStyle: style.actionTextStyle || 'normal',
+                        actionTextColor: style.actionTextColor || '#000000',
+                    };
+
+                    // Aktifkan Live Preview secara otomatis
+                    this.isLivePreviewEnabled = true;
+
+                    this.selectedStyle = style.name;
+                }
+            };
+        }
+    </script>

@@ -108,6 +108,40 @@ window.addEventListener('scroll', () => {
         <form wire:submit.prevent="saveNotification">
             <!-- Notification Icon Styling Section -->
             <div class="border-b pb-6 mb-8">
+               
+                <div x-data="notificationForm()" class="max-w-4xl mx-auto">
+                    <h3 class="text-lg font-bold mb-4">Pilih Desain Notifikasi</h3>
+
+                    <!-- Bagian grup warna -->
+                    <template x-for="(groupStyles, groupName) in groupedStyles" :key="groupName">
+                        <div class="mb-6">
+                            <!-- Nama grup warna -->
+                            <h6 class="text-base font-semibold capitalize mb-2" x-text="groupName"></h6>
+                            <div class="flex flex-wrap gap-4">
+                                <!-- List style dalam grup -->
+                                <template x-for="style in groupStyles" :key="style.name">
+                                    <div @click="applyStyle(style)"
+                                        :class="{
+                                            'transform scale-105': selectedStyle === style.name
+                                        }"
+                                        class="cursor-pointer p-4 rounded-lg shadow hover:shadow-md transition-all"
+                                        x-bind:style="`
+                                            background: ${style.background};
+                                            border: ${selectedStyle === style.name ? '3px solid black' : '2px solid transparent'};
+                                        `">
+                                        <i :class="style.icon" class="text-3xl"
+                                            x-bind:style="`color: ${style.iconColor};`"></i>
+                                        <h4 x-text="style.name" class="mt-2 text-sm font-semibold"></h4>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+            </div>
+            <!-- Notification Icon Styling Section -->
+            <div class="border-b pb-6 mb-8">
                 <!-- Heading and Description -->
                 <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                     <i class="fas fa-info-circle text-gray-600"></i> Style Icon Notification
@@ -570,3 +604,77 @@ window.addEventListener('scroll', () => {
     </div>
 </div>
 </div>
+<script>
+    function notificationForm() {
+        return {
+            styles: @js($styles), // Data styles dari backend
+            newNotification: @entangle('newNotification'),
+            selectedStyle: null, // Style yang dipilih
+            isLivePreviewEnabled: false,
+
+            get groupedStyles() {
+                const colorGroups = {
+                    blue: ['#d1ecf1', '#cce5ff', '#d1e7f2', '#bbdefb'],
+                    yellow: ['#fff3cd', '#fff9c4', '#fffde7', '#ff9800'],
+                    red: ['#f8d7da', '#ffcdd2', '#ff8a80', '#d50000'],
+                    green: ['#d4edda', '#e8f5e9', '#dff0d8', '#69f0ae'],
+                    purple: ['#e8daef', '#ede7f6', '#9575cd', '#6a1b9a'],
+                    // Tambahkan grup warna lain jika diperlukan
+                };
+
+                const grouped = {
+                    blue: [],
+                    yellow: [],
+                    red: [],
+                    green: [],
+                    purple: [],
+                    "Warna Lainnya": [] // Grup default untuk warna yang tidak sesuai
+                };
+
+                // Iterasi styles untuk memeriksa grup
+                this.styles.forEach(style => {
+                    let foundGroup = false;
+
+                    // Cek apakah style termasuk dalam salah satu grup warna
+                    for (const [group, colors] of Object.entries(colorGroups)) {
+                        if (colors.includes(style.background)) {
+                            grouped[group].push(style);
+                            foundGroup = true;
+                            break;
+                        }
+                    }
+
+                    // Jika style tidak sesuai grup, masukkan ke "Warna Lainnya"
+                    if (!foundGroup) {
+                        grouped["Warna Lainnya"].push(style);
+                    }
+                });
+
+                return grouped;
+            },
+
+            // Fungsi untuk menerapkan style yang dipilih
+            applyStyle(style) {
+                this.newNotification = {
+                    icon: style.icon || '', // Default jika data tidak ada
+                    background: style.background || '#ffffff',
+                    backgroundIconColor: style.backgroundIconColor || '#ffffff',
+                    iconColor: style.iconColor || '#000000',
+                    title: style.title || { in: { text: '' } },
+                    message: style.message || { in: { text: '' } },
+                    messageColor: style.messageColor || '#000000',
+                    titleColor: style.titleColor || '#000000',
+                    actionText: style.actionText || '',
+                    actionURL: style.actionURL || '',
+                    actionTextStyle: style.actionTextStyle || 'normal',
+                    actionTextColor: style.actionTextColor || '#000000',
+                };
+
+                 // Aktifkan Live Preview secara otomatis
+                 this.isLivePreviewEnabled = true;
+
+                this.selectedStyle = style.name;
+            }
+        };
+    }
+</script>
