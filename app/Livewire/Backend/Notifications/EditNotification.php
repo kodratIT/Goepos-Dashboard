@@ -711,12 +711,26 @@ class EditNotification extends Component
     public $selectedStyle = null;
 
     public function applyStyle($styleName)
-    {
-        $this->selectedStyle = collect($this->styles)->firstWhere('name', $styleName);
-        if ($this->selectedStyle) {
-            $this->newNotification = array_merge($this->newNotification, $this->selectedStyle);
+{
+    $this->selectedStyle = collect($this->styles)->firstWhere('name', $styleName);
+
+    if ($this->selectedStyle) {
+        $this->message['in'] = $this->newNotification['liveMessage'];
+        $this->title['in'] = $this->newNotification['liveTitle'];
+        // Iterasi melalui selectedStyle dan tambahkan atau perbarui ke newNotification
+        foreach ($this->selectedStyle as $key => $value) {
+            $this->newNotification[$key] = $value; // Perbarui atau tambahkan nilai dari selectedStyle
         }
+
+        $this->newNotification['liveMessage'] =$this->message['in'];
+        $this->newNotification['liveTitle'] = $this->title['in'];
+
+        // Tidak perlu menghapus kunci di newNotification yang tidak ada di selectedStyle
+        // Kunci tambahan di newNotification tetap dipertahankan
     }
+
+}
+
 
     public function updated($propertyName)
     {
@@ -867,7 +881,7 @@ class EditNotification extends Component
 
     public function updateNotification()
     {
-        // dd($this->newNotification);
+
         $this->message['in'] = $this->newNotification['liveMessage'];
         $this->title['in'] = $this->newNotification['liveTitle'];
 
@@ -902,6 +916,8 @@ class EditNotification extends Component
             'type' => $this->type,
         ];
 
+        // dd($data);
+
 
         $result = $this->firestore()->updateNotification($data, $this->specificTarget, $this->ownerUids);
 
@@ -915,11 +931,12 @@ class EditNotification extends Component
 
     private function formatMessages(array $messages): array
     {
-        // dd($messages);
 
         $formattedMessages = [];
+
         foreach ($messages as $lang => $message) {
             $translatedActionText = $this->actionText[$lang] ?? '';
+
             $formattedMessage = [
                 'lang' => $lang,
                 'text' => $message, // Akses langsung teks karena tidak lagi memiliki subfield 'text'
@@ -939,8 +956,15 @@ class EditNotification extends Component
                 $formattedMessage['actionTextColor'] = $this->newNotification['actionTextColor'];
             }
 
-            $formattedMessages[] = $formattedMessage;
+            // $formattedMessages[] = $formattedMessage;
+            if (isset($formattedMessage['text'])
+                && is_string($formattedMessage['text'])
+                && $formattedMessage['text'] !== '') {
+                $formattedMessages[] = $formattedMessage;
+            }
+
         }
+
 
         return $formattedMessages;
 
@@ -949,14 +973,27 @@ class EditNotification extends Component
     private function formatTitles(array $titles): array
     {
         $formattedTitles = [];
+        $formattedTitless = []; // Pastikan ini didefinisikan terlebih dahulu
+
         foreach ($titles as $lang => $title) {
-            $formattedTitles[] = [
+            $formattedTitle = [
                 'lang' => $lang,
                 'text' => $title,
             ];
+
+            // Pastikan text adalah string dan tidak kosong sebelum menambahkan ke $formattedTitless
+            if (isset($formattedTitle['text'])
+                && is_string($formattedTitle['text'])
+                && $formattedTitle['text'] !== '') {
+                $formattedTitless[] = $formattedTitle;
+            }
+
+            // // Tetap tambahkan semua elemen ke $formattedTitles tanpa filter
+            // $formattedTitles[] = $formattedTitle;
         }
 
-        return $formattedTitles;
+        return $formattedTitless;
+
     }
 
     public function render()

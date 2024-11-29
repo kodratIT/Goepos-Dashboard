@@ -29,6 +29,7 @@ class AddNotification extends Component
             'actionURL' => 'https://example.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#0c5460',
+            'showUntil' => null,
         ],
         [
             'name' => 'Warning Style',
@@ -48,6 +49,7 @@ class AddNotification extends Component
             'actionURL' => 'https://example-warning.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#856404',
+            'showUntil' => null,
         ],
         [
             'name' => 'Danger Style',
@@ -67,6 +69,7 @@ class AddNotification extends Component
             'actionURL' => 'https://example-danger.com',
             'actionTextStyle' => 'underline',
             'actionTextColor' => '#721c24',
+            'showUntil' => null,
         ],
         [
             'name' => 'Success Style',
@@ -86,6 +89,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-success.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#155724',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Neutral Style',
@@ -105,6 +110,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-neutral.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#818182',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Primary Style',
@@ -124,6 +131,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-primary.com',
             'actionTextStyle' => 'underline',
             'actionTextColor' => '#004085',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Custom Purple',
@@ -143,6 +152,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-purple.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#7d3c98',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Custom Orange',
@@ -162,6 +173,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-orange.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#d35400',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Soft Pink',
@@ -181,6 +194,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-softpink.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ad1457',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Calm Green',
@@ -200,6 +215,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-calmgreen.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#2e7d32',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Bold Red',
@@ -219,6 +236,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-boldred.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#b71c1c',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Cool Blue',
@@ -234,6 +253,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-coolblue.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#004e89',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Golden Yellow',
@@ -249,6 +270,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-goldenyellow.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#fbc02d',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Bright Green',
@@ -264,6 +287,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-brightgreen.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#2c5f2d',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Sunset Orange',
@@ -279,6 +304,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-sunsetorange.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#d94a2f',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Mystic Purple',
@@ -294,6 +321,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-mysticpurple.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#5e35b1',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Pastel Green',
@@ -309,6 +338,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-pastelgreen.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#367b48',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Coral Red',
@@ -324,6 +355,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-coralred.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#c62828',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Sky Blue',
@@ -339,6 +372,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-skyblue.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#1565c0',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Golden Glow',
@@ -354,6 +389,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-goldenglow.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#fbc02d',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Soft Cyan',
@@ -369,6 +406,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-softcyan.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#00796b',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Ocean Breeze',
@@ -384,6 +423,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-ocean.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Sunset Glow',
@@ -399,6 +440,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-sunset.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Forest Whisper',
@@ -414,6 +457,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-forest.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Lavender Dream',
@@ -429,6 +474,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-lavender.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Peachy Keen',
@@ -444,6 +491,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-peach.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Minty Fresh',
@@ -459,6 +508,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-mint.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Coral Charm',
@@ -474,6 +525,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-coral.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Sunny Side',
@@ -489,6 +542,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-sunny.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],    [
             'name' => 'Berry Blast',
             'icon' => 'https://www.w3schools.com/icons/fontawesome_fa-grape.png',
@@ -503,6 +558,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-berry.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Placid Blue',
@@ -518,6 +575,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-placidblue.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#01579b',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Blazing Orange',
@@ -533,6 +592,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-orange.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Elegant Purple',
@@ -548,6 +609,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-purple.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Soft Sand',
@@ -563,6 +626,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-sand.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#6d4c41',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Spring Green',
@@ -578,6 +643,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-green.com',
             'actionTextStyle' => 'italic',
             'actionTextColor' => '#00c853',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Crisp White',
@@ -593,6 +660,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-crisp.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#607d8b',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Velvet Red',
@@ -608,6 +677,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-red.com',
             'actionTextStyle' => 'normal',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         [
             'name' => 'Moody Blue',
@@ -623,6 +694,8 @@ class AddNotification extends Component
             'actionURL' => 'https://example-blue.com',
             'actionTextStyle' => 'bold',
             'actionTextColor' => '#ffffff',
+            'showUntil' => null,
+
         ],
         // Tambahkan pola serupa hingga total 30 desain.
     ];

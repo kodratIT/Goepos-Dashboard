@@ -590,6 +590,7 @@ window.addEventListener('scroll', () => {
                         actionURL: style.actionURL || '',
                         actionTextStyle: style.actionTextStyle || 'normal',
                         actionTextColor: style.actionTextColor || '#000000',
+                        showUntil: null
                     };
 
                     // Aktifkan Live Preview secara otomatis

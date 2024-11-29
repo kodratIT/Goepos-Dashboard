@@ -108,7 +108,7 @@ window.addEventListener('scroll', () => {
         <form wire:submit.prevent="saveNotification">
             <!-- Notification Icon Styling Section -->
             <div class="border-b pb-6 mb-8">
-               
+
                 <div x-data="notificationForm()" class="max-w-4xl mx-auto">
                     <h3 class="text-lg font-bold mb-4">Pilih Desain Notifikasi</h3>
 
@@ -668,6 +668,7 @@ window.addEventListener('scroll', () => {
                     actionURL: style.actionURL || '',
                     actionTextStyle: style.actionTextStyle || 'normal',
                     actionTextColor: style.actionTextColor || '#000000',
+                    showUntil: null
                 };
 
                  // Aktifkan Live Preview secara otomatis
